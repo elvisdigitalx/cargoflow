@@ -67,7 +67,7 @@ foreach ($navSections as $items) {
     <!-- ============ SIDEBAR ============ -->
     <aside class="admin-sidebar" id="adminSidebar">
         <a href="<?= base_url('admin/index.php') ?>" class="sidebar-brand">
-            <svg width="28" height="28" viewBox="0 0 32 32" fill="none"><rect x="1" y="1" width="30" height="30" rx="8" fill="#2563eb"/><path d="M9 20l4-8 3 6 3-6 4 8" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>
+            <svg width="28" height="28" viewBox="0 0 32 32" fill="none"><rect x="1" y="1" width="30" height="30" rx="8" fill="#e82127"/><path d="M9 20l4-8 3 6 3-6 4 8" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>
             CargoFlow
         </a>
         <nav class="sidebar-nav">

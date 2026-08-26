@@ -78,10 +78,10 @@ function lineChart(id, labels, data, color) {
 function render() {
     var rev = buildSeries(stats.monthly_revenue, true);
     var vol = buildSeries(stats.monthly_volume, false);
-    lineChart('revChart', rev.labels, rev.data, '#2563eb');
-    lineChart('volChart', vol.labels, vol.data, '#06b6d4');
+    lineChart('revChart', rev.labels, rev.data, '#e82127');
+    lineChart('volChart', vol.labels, vol.data, '#f97316');
 
-    var palette = { pending:'#94a3b8', picked_up:'#0ea5e9', in_transit:'#2563eb', out_for_delivery:'#f59e0b', delivered:'#10b981', on_hold:'#f97316', customs:'#8b5cf6', cancelled:'#ef4444', returned:'#dc2626' };
+    var palette = { pending:'#94a3b8', picked_up:'#f97316', in_transit:'#e82127', out_for_delivery:'#f59e0b', delivered:'#10b981', on_hold:'#f97316', customs:'#8b5cf6', cancelled:'#ef4444', returned:'#dc2626' };
     new Chart(document.getElementById('statusChart'), {
         type: 'bar',
         data: {

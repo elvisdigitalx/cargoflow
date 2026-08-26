@@ -9,12 +9,14 @@
 
 declare(strict_types=1);
 
+// Configuration must be loaded first — SESSION_NAME and APP_TIMEZONE are
+// defined there and used below (previously this fataled on PHP 8+).
+require_once __DIR__ . '/../config/config.php';
+
 if (session_status() === PHP_SESSION_NONE) {
     session_name(SESSION_NAME ?? 'cargoflow_session');
     session_start();
 }
-
-require_once __DIR__ . '/../config/config.php';
 
 date_default_timezone_set(APP_TIMEZONE);
 

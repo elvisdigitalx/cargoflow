@@ -14,7 +14,7 @@ $cf_site_address = setting('site_address', '100 Logistics Way, San Francisco, CA
                 <a class="navbar-brand d-inline-block mb-3" href="<?= base_url('index.php') ?>">
                     <span class="d-inline-flex align-items-center gap-2 text-white">
                         <svg width="28" height="28" viewBox="0 0 32 32" fill="none" aria-hidden="true">
-                            <rect x="1" y="1" width="30" height="30" rx="8" fill="#2563eb"/>
+                            <rect x="1" y="1" width="30" height="30" rx="8" fill="#e82127"/>
                             <path d="M9 20l4-8 3 6 3-6 4 8" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
                         </svg>
                         CargoFlow
@@ -39,7 +39,6 @@ $cf_site_address = setting('site_address', '100 Logistics Way, San Francisco, CA
                     <li><a href="<?= base_url('services.php') ?>">Services</a></li>
                     <li><a href="<?= base_url('contact.php') ?>">Contact</a></li>
                     <li><a href="<?= base_url('quote.php') ?>">Get a Quote</a></li>
-                    <li><a href="<?= base_url('login.php') ?>">Admin Login</a></li>
                 </ul>
             </div>
             <div class="col-lg-2 col-md-6 col-6">

@@ -206,7 +206,7 @@ require __DIR__ . '/includes/header.php';
                 datasets: [{
                     label: mode === 'revenue' ? 'Revenue' : 'Shipments',
                     data: data,
-                    backgroundColor: mode === 'revenue' ? 'rgba(37,99,235,.7)' : 'rgba(6,182,212,.7)',
+                    backgroundColor: mode === 'revenue' ? 'rgba(232,33,39,.75)' : 'rgba(249,115,22,.75)',
                     borderRadius: 6
                 }]
             },
@@ -222,7 +222,7 @@ require __DIR__ . '/includes/header.php';
         if (!stats) return;
         var labels = [], counts = [], colors = [];
         var palette = {
-            pending: '#94a3b8', picked_up: '#0ea5e9', in_transit: '#2563eb',
+            pending: '#94a3b8', picked_up: '#f97316', in_transit: '#e82127',
             out_for_delivery: '#f59e0b', delivered: '#10b981', on_hold: '#f97316',
             customs: '#8b5cf6', cancelled: '#ef4444', returned: '#dc2626'
         };
