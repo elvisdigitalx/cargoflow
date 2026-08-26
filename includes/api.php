@@ -23,13 +23,18 @@ function api_input(): array
 /**
  * Guard: require login + CSRF for admin endpoints.
  * Returns a JSON 401 (instead of an HTML redirect) for AJAX callers.
+ * CSRF is only enforced on state-changing requests (POST/PUT/PATCH/DELETE) —
+ * read-only GETs skip it so list views never break on a rotated token.
  */
 function api_require_admin(): void
 {
     if (!is_logged_in()) {
-        json_response(['success' => false, 'message' => 'Unauthorized. Please log in.'], 401);
+        json_response(['success' => false, 'message' => 'Your session has expired. Please log in again.', 'code' => 'auth'], 401);
     }
-    verify_csrf();
+    $method = strtoupper($_SERVER['REQUEST_METHOD'] ?? 'GET');
+    if (!in_array($method, ['GET', 'HEAD', 'OPTIONS'], true)) {
+        verify_csrf();
+    }
 }
 
 /**

@@ -572,8 +572,11 @@ font img.goog-te-highlight { box-shadow: none !important; background: transparen
 /* ------------------------------------------------------------------ */
 /* Reveal-on-scroll animations                                         */
 /* ------------------------------------------------------------------ */
-.reveal { opacity: 0; transform: translateY(24px); transition: opacity .6s ease, transform .6s ease; }
-.reveal.in { opacity: 1; transform: translateY(0); }
+/* Content is visible by default; it's only hidden for the entrance
+   animation when JS is confirmed running (html.cf-js), so shipment
+   results and sections can never be stuck invisible. */
+html.cf-js .reveal { opacity: 0; transform: translateY(24px); transition: opacity .6s ease, transform .6s ease; }
+html.cf-js .reveal.in { opacity: 1; transform: translateY(0); }
 
 /* ------------------------------------------------------------------ */
 /* Responsive tweaks                                                   */

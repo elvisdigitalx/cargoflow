@@ -43,11 +43,14 @@ $monthlyVolume = fetchAll(
      ORDER BY month ASC"
 );
 
-// Recent shipments
+// Recent shipments (prefer the new sender/receiver fields, fall back to legacy customer)
+$senderSelect = shipment_column_exists('sender_name')
+    ? "COALESCE(NULLIF(s.sender_name, ''), c.name) AS customer_name, s.sender_name, s.receiver_name"
+    : 'c.name AS customer_name';
 $recentShipments = fetchAll(
-    'SELECT s.tracking_number, s.status, s.destination, s.created_at, c.name AS customer_name
+    "SELECT s.tracking_number, s.status, s.destination, s.created_at, $senderSelect
      FROM shipments s LEFT JOIN customers c ON c.id = s.customer_id
-     ORDER BY s.created_at DESC LIMIT 6'
+     ORDER BY s.created_at DESC LIMIT 6"
 );
 
 // Recent payments

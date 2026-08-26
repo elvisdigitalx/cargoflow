@@ -15,7 +15,7 @@ $events = [];
 $error = null;
 
 if ($tracking !== '') {
-    ensure_package_image_column();
+    ensure_shipment_columns();
     $shipment = fetchOne(
         'SELECT s.*, c.name AS customer_name, c.email AS customer_email,
                 d.name AS driver_name, v.name AS vehicle_name
@@ -118,6 +118,25 @@ require __DIR__ . '/includes/header.php';
                         </div>
 
                         <dl class="row small mb-0">
+                            <?php $senderDisplay = trim((string) ($shipment['sender_name'] ?? '')) ?: trim((string) ($shipment['customer_name'] ?? '')); ?>
+                            <?php if ($senderDisplay): ?>
+                            <dt class="col-5 text-muted-2 fw-semibold">Sender</dt>
+                            <dd class="col-7"><?= e($senderDisplay) ?>
+                                <?php if (!empty($shipment['sender_details'])): ?>
+                                <div class="text-muted-2" style="font-size:.8rem;white-space:pre-line;"><?= e($shipment['sender_details']) ?></div>
+                                <?php endif; ?>
+                            </dd>
+                            <?php endif; ?>
+
+                            <?php if (!empty($shipment['receiver_name'])): ?>
+                            <dt class="col-5 text-muted-2 fw-semibold">Receiver</dt>
+                            <dd class="col-7"><?= e($shipment['receiver_name']) ?>
+                                <?php if (!empty($shipment['receiver_details'])): ?>
+                                <div class="text-muted-2" style="font-size:.8rem;white-space:pre-line;"><?= e($shipment['receiver_details']) ?></div>
+                                <?php endif; ?>
+                            </dd>
+                            <?php endif; ?>
+
                             <dt class="col-5 text-muted-2 fw-semibold">Service</dt>
                             <dd class="col-7 text-capitalize"><?= e($shipment['service_type']) ?></dd>
 

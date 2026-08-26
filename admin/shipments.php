@@ -9,7 +9,6 @@ require_login();
 $adminPage = 'shipments';
 $adminTitle = 'Shipments';
 
-$customers = fetchAll('SELECT id, name FROM customers ORDER BY name ASC');
 $drivers = fetchAll('SELECT id, name FROM drivers ORDER BY name ASC');
 $vehicles = fetchAll('SELECT id, name FROM vehicles ORDER BY name ASC');
 $statuses = shipment_statuses();
@@ -30,7 +29,7 @@ require __DIR__ . '/includes/header.php';
     <div class="card-header d-flex flex-wrap gap-2 align-items-center">
         <div class="input-group input-group-sm" style="max-width:280px;">
             <span class="input-group-text bg-transparent"><i class="bi bi-search"></i></span>
-            <input type="text" class="form-control" id="searchInput" placeholder="Search tracking, customer, location…">
+            <input type="text" class="form-control" id="searchInput" placeholder="Search tracking, sender, receiver, location…">
         </div>
         <select class="form-select form-select-sm" id="statusFilter" style="max-width:180px;">
             <option value="">All statuses</option>
@@ -45,7 +44,7 @@ require __DIR__ . '/includes/header.php';
             <thead>
                 <tr>
                     <th>Tracking #</th>
-                    <th>Customer</th>
+                    <th>Sender → Receiver</th>
                     <th>Route</th>
                     <th>Service</th>
                     <th>Status</th>
@@ -79,13 +78,20 @@ require __DIR__ . '/includes/header.php';
                 <div class="modal-body">
                     <div class="row g-3">
                         <div class="col-md-6">
-                            <label class="form-label">Customer</label>
-                            <select class="form-select" name="customer_id" id="f_customer">
-                                <option value="">— Walk-in / none —</option>
-                                <?php foreach ($customers as $c): ?>
-                                    <option value="<?= $c['id'] ?>"><?= e($c['name']) ?></option>
-                                <?php endforeach; ?>
-                            </select>
+                            <label class="form-label">Sender name</label>
+                            <input type="text" class="form-control" name="sender_name" id="f_sender_name" placeholder="Full name / company">
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Receiver name</label>
+                            <input type="text" class="form-control" name="receiver_name" id="f_receiver_name" placeholder="Full name / company">
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Sender details</label>
+                            <textarea class="form-control" name="sender_details" id="f_sender_details" rows="2" placeholder="Phone, email, address…"></textarea>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Receiver details</label>
+                            <textarea class="form-control" name="receiver_details" id="f_receiver_details" rows="2" placeholder="Phone, email, address…"></textarea>
                         </div>
                         <div class="col-md-6">
                             <label class="form-label">Service type</label>
@@ -216,6 +222,11 @@ var state = { page: 1, search: '', status: '' };
 var modal = new bootstrap.Modal(document.getElementById('shipmentModal'));
 var detailModal = new bootstrap.Modal(document.getElementById('detailModal'));
 
+function esc(v) {
+    return String(v == null ? '' : v).replace(/[&<>"']/g, function (c) {
+        return { '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;' }[c];
+    });
+}
 function statusBadge(s) {
     var map = { pending:'secondary', picked_up:'info', in_transit:'primary', out_for_delivery:'warning', delivered:'success', on_hold:'warning', customs:'info', cancelled:'danger', returned:'danger' };
     return '<span class="badge bg-' + (map[s]||'secondary') + ' rounded-pill">' + s.replace(/_/g,' ') + '</span>';
@@ -233,7 +244,7 @@ function loadShipments() {
             tbody.innerHTML = rows.map(function (s) {
                 return '<tr>' +
                     '<td><span class="tracking-chip">' + s.tracking_number + '</span></td>' +
-                    '<td>' + (s.customer_name || '—') + '</td>' +
+                    '<td><div class="small fw-semibold">' + esc(s.sender_name || s.customer_name || '—') + '</div><div class="text-muted-2 small"><i class="bi bi-arrow-down"></i> ' + esc(s.receiver_name || '—') + '</div></td>' +
                     '<td><div class="small fw-semibold">' + (s.origin||'—') + '</div><div class="text-muted-2 small"><i class="bi bi-arrow-down"></i> ' + (s.destination||'—') + '</div></td>' +
                     '<td class="text-capitalize">' + s.service_type + '</td>' +
                     '<td>' + statusBadge(s.status) + '</td>' +
@@ -297,7 +308,7 @@ function openEdit(id) {
         document.getElementById('shipmentId').value = s.id;
         var f = document.getElementById('shipmentModal').querySelector('form');
         f.reset();
-        ['customer_id','service_type','origin','destination','package_type','weight','quantity','driver_id','vehicle_id','status','current_location','estimated_delivery','price','currency','carrier','dimensions','description'].forEach(function (k) {
+        ['sender_name','sender_details','receiver_name','receiver_details','service_type','origin','destination','package_type','weight','quantity','driver_id','vehicle_id','status','current_location','estimated_delivery','price','currency','carrier','dimensions','description'].forEach(function (k) {
             var el = f.elements[k];
             if (el && s[k] !== null && s[k] !== undefined) el.value = s[k];
         });
@@ -344,10 +355,17 @@ function openDetail(id) {
                 statusBadge(s.status) + '</div>' +
             '<div class="mb-3"><div class="text-muted-2 small text-uppercase mb-1">Package</div>' +
                 '<img src="' + pkgImg + '" alt="Package photo" class="rounded border" style="width:140px;height:140px;object-fit:cover;"></div>' +
+            '<div class="row small mb-3">' +
+                '<div class="col-md-6 mb-2"><div class="text-muted-2 small text-uppercase">Sender</div>' +
+                    '<div class="fw-semibold">' + esc(s.sender_name || s.customer_name || '—') + '</div>' +
+                    (s.sender_details ? '<div class="text-muted-2" style="white-space:pre-line;">' + esc(s.sender_details) + '</div>' : '') + '</div>' +
+                '<div class="col-md-6 mb-2"><div class="text-muted-2 small text-uppercase">Receiver</div>' +
+                    '<div class="fw-semibold">' + esc(s.receiver_name || '—') + '</div>' +
+                    (s.receiver_details ? '<div class="text-muted-2" style="white-space:pre-line;">' + esc(s.receiver_details) + '</div>' : '') + '</div>' +
+            '</div>' +
             '<div class="row small mb-4">' +
                 '<div class="col-6 mb-2"><span class="text-muted-2">Origin:</span> ' + (s.origin||'—') + '</div>' +
                 '<div class="col-6 mb-2"><span class="text-muted-2">Destination:</span> ' + (s.destination||'—') + '</div>' +
-                '<div class="col-6 mb-2"><span class="text-muted-2">Customer:</span> ' + (s.customer_name||'—') + '</div>' +
                 '<div class="col-6 mb-2"><span class="text-muted-2">Driver:</span> ' + (s.driver_name||'—') + '</div>' +
                 '<div class="col-6 mb-2"><span class="text-muted-2">Vehicle:</span> ' + (s.vehicle_name||'—') + '</div>' +
                 '<div class="col-6 mb-2"><span class="text-muted-2">Weight:</span> ' + (s.weight||'—') + ' kg</div>' +

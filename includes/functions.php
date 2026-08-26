@@ -57,6 +57,19 @@ if (!function_exists('base_url')) {
     }
 }
 
+if (!function_exists('asset_url')) {
+    /**
+     * base_url() + a cache-busting version query based on the file's mtime,
+     * so browsers always pick up freshly deployed CSS/JS.
+     */
+    function asset_url(string $path): string
+    {
+        $file = dirname(__DIR__) . '/' . ltrim($path, '/');
+        $ver = is_file($file) ? (string) filemtime($file) : (defined('APP_VERSION') ? APP_VERSION : '1');
+        return base_url($path) . '?v=' . $ver;
+    }
+}
+
 if (!function_exists('e')) {
     /**
      * HTML-escape output.
@@ -301,14 +314,15 @@ if (!function_exists('generate_tracking_number')) {
 }
 
 // ---------------------------------------------------------------------
-// Package images
+// Shipment schema auto-migration (package image + sender/receiver)
 // ---------------------------------------------------------------------
-if (!function_exists('ensure_package_image_column')) {
+if (!function_exists('ensure_shipment_columns')) {
     /**
-     * Auto-migrate: make sure shipments.package_image exists.
-     * Safe to call on every request that touches the column (cached per request).
+     * Auto-migrate: make sure newer shipments columns exist
+     * (package_image, sender/receiver details).
+     * Safe to call on every request that touches them (cached per request).
      */
-    function ensure_package_image_column(): void
+    function ensure_shipment_columns(): void
     {
         static $done = false;
         if ($done) {
@@ -316,13 +330,55 @@ if (!function_exists('ensure_package_image_column')) {
         }
         $done = true;
         try {
-            $col = fetchOne("SHOW COLUMNS FROM `shipments` LIKE 'package_image'");
-            if (!$col) {
-                query("ALTER TABLE `shipments` ADD COLUMN `package_image` VARCHAR(255) DEFAULT NULL AFTER `package_type`");
+            $existing = [];
+            foreach (fetchAll('SHOW COLUMNS FROM `shipments`') as $col) {
+                $existing[$col['Field']] = true;
             }
+            if (!$existing) {
+                return; // Table missing (installer) — nothing to do.
+            }
+            $wanted = [
+                'package_image'    => "ALTER TABLE `shipments` ADD COLUMN `package_image` VARCHAR(255) DEFAULT NULL AFTER `package_type`",
+                'sender_name'      => "ALTER TABLE `shipments` ADD COLUMN `sender_name` VARCHAR(160) DEFAULT NULL AFTER `customer_id`",
+                'sender_details'   => "ALTER TABLE `shipments` ADD COLUMN `sender_details` TEXT AFTER `sender_name`",
+                'receiver_name'    => "ALTER TABLE `shipments` ADD COLUMN `receiver_name` VARCHAR(160) DEFAULT NULL AFTER `sender_details`",
+                'receiver_details' => "ALTER TABLE `shipments` ADD COLUMN `receiver_details` TEXT AFTER `receiver_name`",
+            ];
+            foreach ($wanted as $column => $sql) {
+                if (!isset($existing[$column])) {
+                    try {
+                        query($sql);
+                        $existing[$column] = true;
+                    } catch (Throwable $e) {
+                        // No ALTER privilege — callers must degrade gracefully.
+                    }
+                }
+            }
+            $GLOBALS['cf_shipment_columns'] = $existing;
         } catch (Throwable $e) {
             // Table may not exist yet (installer) — ignore.
         }
+    }
+}
+
+if (!function_exists('shipment_column_exists')) {
+    /** Whether a shipments column is actually available in the live DB. */
+    function shipment_column_exists(string $column): bool
+    {
+        ensure_shipment_columns();
+        $cols = $GLOBALS['cf_shipment_columns'] ?? null;
+        if ($cols === null) {
+            return true; // Could not inspect — assume schema is current.
+        }
+        return isset($cols[$column]);
+    }
+}
+
+if (!function_exists('ensure_package_image_column')) {
+    /** Back-compat alias — see ensure_shipment_columns(). */
+    function ensure_package_image_column(): void
+    {
+        ensure_shipment_columns();
     }
 }
 

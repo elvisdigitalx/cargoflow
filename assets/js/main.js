@@ -4,6 +4,11 @@
 (function () {
     'use strict';
 
+    /* Mark JS as active (enables the reveal-on-scroll entrance animation).
+       Without this class all .reveal content stays visible by default, so
+       tracking results and page sections can never be stuck invisible. */
+    document.documentElement.classList.add('cf-js');
+
     /* ---------------- Theme (dark / light mode) ---------------- */
     function applyTheme(theme) {
         document.documentElement.setAttribute('data-bs-theme', theme);

@@ -90,6 +90,6 @@ function googleTranslateElementInit() {
 <script type="text/javascript" src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit" defer></script>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-<script src="<?= base_url('assets/js/main.js') ?>"></script>
+<script src="<?= asset_url('assets/js/main.js') ?>"></script>
 </body>
 </html>

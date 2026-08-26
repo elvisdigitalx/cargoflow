@@ -29,6 +29,7 @@ patterns + vanilla JavaScript**. No frameworks, no React, no Node backend, no SQ
 - Secure login / logout with hashed passwords (bcrypt) & CSRF protection
 - Modern dashboard with KPI cards and Chart.js visualizations
 - Shipments — full CRUD, automatic tracking-number generation (`CF-XXXXXXXXXX`)
+- Sender & receiver details per shipment (free-text name + contact/address details)
 - Package photo upload per shipment (JPG/PNG/WEBP/GIF, max 5 MB, stored in `uploads/packages/`)
 - Tracking status / event management (add events, sync status & location)
 - Customers, Drivers & Vehicles management
