@@ -40,9 +40,21 @@ $cf_nav   = [
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
     <!-- CargoFlow -->
-    <link href="<?= base_url('assets/css/style.css') ?>" rel="stylesheet">
+    <link href="<?= asset_url('assets/css/style.css') ?>" rel="stylesheet">
 </head>
 <body>
+
+<!-- Page preloader -->
+<noscript><style>.cf-preloader{display:none !important;}</style></noscript>
+<div class="cf-preloader" id="cfPreloader" aria-hidden="true">
+    <div class="cf-preloader-inner">
+        <svg width="52" height="52" viewBox="0 0 32 32" fill="none" aria-hidden="true">
+            <rect x="1" y="1" width="30" height="30" rx="8" fill="#e82127"/>
+            <path d="M9 20l4-8 3 6 3-6 4 8" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+        </svg>
+        <div class="cf-preloader-bar"><span></span></div>
+    </div>
+</div>
 
 <nav class="navbar navbar-expand-lg navbar-cf sticky-top">
     <div class="container">

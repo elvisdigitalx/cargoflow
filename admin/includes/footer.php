@@ -15,7 +15,6 @@
 
 <div class="cf-toast" aria-live="polite" aria-atomic="true"></div>
 
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-<script src="<?= base_url('admin/assets/admin.js') ?>"></script>
+<!-- bootstrap + admin.js are loaded in the header so page scripts can use them -->
 </body>
 </html>

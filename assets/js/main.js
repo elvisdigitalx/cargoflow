@@ -4,6 +4,11 @@
 (function () {
     'use strict';
 
+    /* Mark JS as active (enables the reveal-on-scroll entrance animation).
+       Without this class all .reveal content stays visible by default, so
+       tracking results and page sections can never be stuck invisible. */
+    document.documentElement.classList.add('cf-js');
+
     /* ---------------- Theme (dark / light mode) ---------------- */
     function applyTheme(theme) {
         document.documentElement.setAttribute('data-bs-theme', theme);
@@ -37,6 +42,133 @@
             toggleTheme();
         }
     });
+
+    /* ---------------- Page preloader ---------------- */
+    function hidePreloader() {
+        var pre = document.getElementById('cfPreloader');
+        if (!pre || pre.classList.contains('done')) return;
+        pre.classList.add('done');
+        setTimeout(function () { if (pre.parentNode) pre.parentNode.removeChild(pre); }, 600);
+    }
+    if (document.readyState === 'complete') {
+        hidePreloader();
+    } else {
+        window.addEventListener('load', hidePreloader);
+        // Safety net: never keep users staring at the loader.
+        setTimeout(hidePreloader, 4000);
+    }
+    // Restore instantly when navigating back from bfcache.
+    window.addEventListener('pageshow', function (e) { if (e.persisted) hidePreloader(); });
+
+    /* ---------------- Minimal language switcher (left side) ---------------- */
+    (function () {
+        var wrap = document.getElementById('cfLangSwitcher');
+        if (!wrap) return;
+        var btn = document.getElementById('cfLangBtn');
+        var menu = document.getElementById('cfLangMenu');
+        var current = document.getElementById('cfLangCurrent');
+
+        var LANGS = [
+            { code: 'en',    short: 'EN', label: 'English' },
+            { code: 'fr',    short: 'FR', label: 'Français' },
+            { code: 'es',    short: 'ES', label: 'Español' },
+            { code: 'pt',    short: 'PT', label: 'Português' },
+            { code: 'de',    short: 'DE', label: 'Deutsch' },
+            { code: 'it',    short: 'IT', label: 'Italiano' },
+            { code: 'zh-CN', short: 'ZH', label: '中文' },
+            { code: 'ar',    short: 'AR', label: 'العربية' },
+            { code: 'sw',    short: 'SW', label: 'Kiswahili' },
+            { code: 'yo',    short: 'YO', label: 'Yorùbá' },
+            { code: 'ha',    short: 'HA', label: 'Hausa' },
+            { code: 'ig',    short: 'IG', label: 'Igbo' }
+        ];
+
+        function getActiveLang() {
+            var m = document.cookie.match(/(?:^|;\s*)googtrans=([^;]+)/);
+            if (m) {
+                var parts = decodeURIComponent(m[1]).split('/');
+                var code = parts[parts.length - 1];
+                if (code && code !== 'en' && code !== 'auto') return code;
+            }
+            return 'en';
+        }
+
+        function setCombo(code) {
+            var combo = document.querySelector('select.goog-te-combo');
+            if (!combo) return false;
+            combo.value = code === 'en' ? '' : code;
+            combo.dispatchEvent(new Event('change'));
+            return true;
+        }
+
+        function clearGoogTransCookie() {
+            var host = window.location.hostname;
+            var domains = ['', host];
+            var p = host.split('.');
+            while (p.length > 2) { p.shift(); domains.push('.' + p.join('.')); }
+            if (p.length === 2) domains.push('.' + p.join('.'));
+            domains.forEach(function (d) {
+                document.cookie = 'googtrans=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT' + (d ? '; domain=' + d : '');
+            });
+        }
+
+        function selectLang(code) {
+            wrap.classList.remove('open');
+            btn.setAttribute('aria-expanded', 'false');
+            if (code === 'en') {
+                // Restoring the original language reliably needs a clean reload.
+                clearGoogTransCookie();
+                document.cookie = 'googtrans=/en/en; path=/';
+                window.location.reload();
+                return;
+            }
+            if (!setCombo(code)) {
+                // Widget not ready yet — set cookie and reload as a fallback.
+                document.cookie = 'googtrans=/en/' + code + '; path=/';
+                window.location.reload();
+                return;
+            }
+            updateUI(code);
+        }
+
+        function updateUI(code) {
+            var lang = LANGS.filter(function (l) { return l.code === code; })[0] || LANGS[0];
+            current.textContent = lang.short;
+            menu.querySelectorAll('button').forEach(function (b) {
+                b.classList.toggle('active', b.getAttribute('data-lang') === lang.code);
+            });
+        }
+
+        // Build menu
+        LANGS.forEach(function (l) {
+            var b = document.createElement('button');
+            b.type = 'button';
+            b.setAttribute('role', 'menuitem');
+            b.setAttribute('data-lang', l.code);
+            b.textContent = l.label;
+            b.addEventListener('click', function () { selectLang(l.code); });
+            menu.appendChild(b);
+        });
+        updateUI(getActiveLang());
+
+        btn.addEventListener('click', function (e) {
+            e.stopPropagation();
+            var open = wrap.classList.toggle('open');
+            btn.setAttribute('aria-expanded', open ? 'true' : 'false');
+        });
+        document.addEventListener('click', function (e) {
+            if (!wrap.contains(e.target)) {
+                wrap.classList.remove('open');
+                btn.setAttribute('aria-expanded', 'false');
+            }
+        });
+        document.addEventListener('keydown', function (e) {
+            if (e.key === 'Escape') {
+                wrap.classList.remove('open');
+                btn.setAttribute('aria-expanded', 'false');
+            }
+        });
+    })();
 
     /* ---------------- Navbar scroll state ---------------- */
     var navbar = document.querySelector('.navbar-cf');

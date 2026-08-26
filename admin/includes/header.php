@@ -62,9 +62,27 @@ foreach ($navSections as $items) {
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
-    <link href="<?= base_url('admin/assets/admin.css') ?>" rel="stylesheet">
+    <link href="<?= asset_url('admin/assets/admin.css') ?>" rel="stylesheet">
+    <!-- Load JS libraries up-front so per-page inline scripts (which run
+         before the footer) can always use bootstrap.* and CF.* safely. -->
+    <script>window.CF_LOGIN_URL = <?= json_encode(base_url('login.php')) ?>;</script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="<?= asset_url('admin/assets/admin.js') ?>"></script>
 </head>
 <body class="admin">
+
+<!-- Page preloader -->
+<noscript><style>.cf-preloader{display:none !important;}</style></noscript>
+<div class="cf-preloader" id="cfPreloader" aria-hidden="true">
+    <div class="cf-preloader-inner">
+        <svg width="52" height="52" viewBox="0 0 32 32" fill="none" aria-hidden="true">
+            <rect x="1" y="1" width="30" height="30" rx="8" fill="#e82127"/>
+            <path d="M9 20l4-8 3 6 3-6 4 8" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+        </svg>
+        <div class="cf-preloader-bar"><span></span></div>
+    </div>
+</div>
+
 <div class="admin-wrapper">
 
     <!-- ============ SIDEBAR ============ -->

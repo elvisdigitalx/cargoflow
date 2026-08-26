@@ -6,6 +6,8 @@
  */
 require_once __DIR__ . '/../includes/bootstrap.php';
 
+ensure_shipment_columns();
+
 $tracking = trim($_GET['tracking'] ?? ($_POST['tracking'] ?? ''));
 
 if ($tracking === '') {
@@ -41,6 +43,10 @@ json_response([
         'tracking_number' => $shipment['tracking_number'],
         'status'          => $shipment['status'],
         'status_label'    => $meta[0],
+        'sender_name'     => ($shipment['sender_name'] ?? '') ?: ($shipment['customer_name'] ?? null),
+        'sender_details'  => $shipment['sender_details'] ?? null,
+        'receiver_name'   => $shipment['receiver_name'] ?? null,
+        'receiver_details'=> $shipment['receiver_details'] ?? null,
         'origin'          => $shipment['origin'],
         'destination'     => $shipment['destination'],
         'origin_address'  => $shipment['origin_address'],
@@ -48,6 +54,7 @@ json_response([
         'current_location'=> $shipment['current_location'],
         'service_type'    => $shipment['service_type'],
         'package_type'    => $shipment['package_type'],
+        'package_image'   => package_image_url($shipment),
         'weight'          => $shipment['weight'],
         'dimensions'      => $shipment['dimensions'],
         'quantity'        => (int) $shipment['quantity'],

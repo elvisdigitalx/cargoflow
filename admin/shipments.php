@@ -9,7 +9,6 @@ require_login();
 $adminPage = 'shipments';
 $adminTitle = 'Shipments';
 
-$customers = fetchAll('SELECT id, name FROM customers ORDER BY name ASC');
 $drivers = fetchAll('SELECT id, name FROM drivers ORDER BY name ASC');
 $vehicles = fetchAll('SELECT id, name FROM vehicles ORDER BY name ASC');
 $statuses = shipment_statuses();
@@ -30,7 +29,7 @@ require __DIR__ . '/includes/header.php';
     <div class="card-header d-flex flex-wrap gap-2 align-items-center">
         <div class="input-group input-group-sm" style="max-width:280px;">
             <span class="input-group-text bg-transparent"><i class="bi bi-search"></i></span>
-            <input type="text" class="form-control" id="searchInput" placeholder="Search tracking, customer, location…">
+            <input type="text" class="form-control" id="searchInput" placeholder="Search tracking, sender, receiver, location…">
         </div>
         <select class="form-select form-select-sm" id="statusFilter" style="max-width:180px;">
             <option value="">All statuses</option>
@@ -45,7 +44,7 @@ require __DIR__ . '/includes/header.php';
             <thead>
                 <tr>
                     <th>Tracking #</th>
-                    <th>Customer</th>
+                    <th>Sender → Receiver</th>
                     <th>Route</th>
                     <th>Service</th>
                     <th>Status</th>
@@ -68,7 +67,7 @@ require __DIR__ . '/includes/header.php';
 <div class="modal fade" id="shipmentModal" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-lg modal-dialog-scrollable">
         <div class="modal-content">
-            <form data-modal-form action="<?= base_url('api/shipments.php') ?>" data-on-success="onShipmentSaved">
+            <form data-modal-form action="<?= base_url('api/shipments.php') ?>" data-on-success="onShipmentSaved" enctype="multipart/form-data">
                 <?= csrf_field() ?>
                 <input type="hidden" name="action" id="shipmentAction" value="create">
                 <input type="hidden" name="id" id="shipmentId" value="">
@@ -79,13 +78,20 @@ require __DIR__ . '/includes/header.php';
                 <div class="modal-body">
                     <div class="row g-3">
                         <div class="col-md-6">
-                            <label class="form-label">Customer</label>
-                            <select class="form-select" name="customer_id" id="f_customer">
-                                <option value="">— Walk-in / none —</option>
-                                <?php foreach ($customers as $c): ?>
-                                    <option value="<?= $c['id'] ?>"><?= e($c['name']) ?></option>
-                                <?php endforeach; ?>
-                            </select>
+                            <label class="form-label">Sender name</label>
+                            <input type="text" class="form-control" name="sender_name" id="f_sender_name" placeholder="Full name / company">
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Receiver name</label>
+                            <input type="text" class="form-control" name="receiver_name" id="f_receiver_name" placeholder="Full name / company">
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Sender details</label>
+                            <textarea class="form-control" name="sender_details" id="f_sender_details" rows="2" placeholder="Phone, email, address…"></textarea>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Receiver details</label>
+                            <textarea class="form-control" name="receiver_details" id="f_receiver_details" rows="2" placeholder="Phone, email, address…"></textarea>
                         </div>
                         <div class="col-md-6">
                             <label class="form-label">Service type</label>
@@ -173,6 +179,20 @@ require __DIR__ . '/includes/header.php';
                             <label class="form-label">Description / contents</label>
                             <textarea class="form-control" name="description" id="f_description" rows="2"></textarea>
                         </div>
+                        <div class="col-12">
+                            <label class="form-label">Package photo <span class="text-muted-2 fw-normal">(optional — shown on the public tracking page)</span></label>
+                            <div class="d-flex align-items-start gap-3 flex-wrap">
+                                <img id="f_image_preview" src="" alt="Package photo preview" class="rounded border d-none" style="width:96px;height:96px;object-fit:cover;">
+                                <div class="flex-grow-1">
+                                    <input type="file" class="form-control" name="package_image" id="f_image" accept="image/jpeg,image/png,image/webp,image/gif">
+                                    <div class="form-check mt-2 d-none" id="f_image_remove_wrap">
+                                        <input class="form-check-input" type="checkbox" name="remove_package_image" value="1" id="f_image_remove">
+                                        <label class="form-check-label small" for="f_image_remove">Remove current photo</label>
+                                    </div>
+                                    <div class="text-muted-2 small mt-1">JPG, PNG, WEBP or GIF — max 5 MB. If none is uploaded, a default image for the package type is shown.</div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
                 <div class="modal-footer">
@@ -202,6 +222,11 @@ var state = { page: 1, search: '', status: '' };
 var modal = new bootstrap.Modal(document.getElementById('shipmentModal'));
 var detailModal = new bootstrap.Modal(document.getElementById('detailModal'));
 
+function esc(v) {
+    return String(v == null ? '' : v).replace(/[&<>"']/g, function (c) {
+        return { '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;' }[c];
+    });
+}
 function statusBadge(s) {
     var map = { pending:'secondary', picked_up:'info', in_transit:'primary', out_for_delivery:'warning', delivered:'success', on_hold:'warning', customs:'info', cancelled:'danger', returned:'danger' };
     return '<span class="badge bg-' + (map[s]||'secondary') + ' rounded-pill">' + s.replace(/_/g,' ') + '</span>';
@@ -219,7 +244,7 @@ function loadShipments() {
             tbody.innerHTML = rows.map(function (s) {
                 return '<tr>' +
                     '<td><span class="tracking-chip">' + s.tracking_number + '</span></td>' +
-                    '<td>' + (s.customer_name || '—') + '</td>' +
+                    '<td><div class="small fw-semibold">' + esc(s.sender_name || s.customer_name || '—') + '</div><div class="text-muted-2 small"><i class="bi bi-arrow-down"></i> ' + esc(s.receiver_name || '—') + '</div></td>' +
                     '<td><div class="small fw-semibold">' + (s.origin||'—') + '</div><div class="text-muted-2 small"><i class="bi bi-arrow-down"></i> ' + (s.destination||'—') + '</div></td>' +
                     '<td class="text-capitalize">' + s.service_type + '</td>' +
                     '<td>' + statusBadge(s.status) + '</td>' +
@@ -247,6 +272,21 @@ function renderPagination(meta) {
 }
 function goPage(p) { state.page = p; loadShipments(); }
 
+function setImagePreview(path) {
+    var img = document.getElementById('f_image_preview');
+    var removeWrap = document.getElementById('f_image_remove_wrap');
+    document.getElementById('f_image_remove').checked = false;
+    if (path) {
+        img.src = '<?= base_url('') ?>' + path.replace(/^\//, '');
+        img.classList.remove('d-none');
+        removeWrap.classList.remove('d-none');
+    } else {
+        img.src = '';
+        img.classList.add('d-none');
+        removeWrap.classList.add('d-none');
+    }
+}
+
 function openCreate() {
     document.getElementById('shipmentModalTitle').textContent = 'New Shipment';
     document.getElementById('shipmentAction').value = 'create';
@@ -257,6 +297,7 @@ function openCreate() {
     document.getElementById('f_status').value = 'pending';
     document.getElementById('f_currency').value = 'USD';
     document.getElementById('f_quantity').value = '1';
+    setImagePreview(null);
 }
 function openEdit(id) {
     CF.api('<?= base_url('api/shipment_detail.php') ?>?id=' + id).then(function (json) {
@@ -267,10 +308,11 @@ function openEdit(id) {
         document.getElementById('shipmentId').value = s.id;
         var f = document.getElementById('shipmentModal').querySelector('form');
         f.reset();
-        ['customer_id','service_type','origin','destination','package_type','weight','quantity','driver_id','vehicle_id','status','current_location','estimated_delivery','price','currency','carrier','dimensions','description'].forEach(function (k) {
+        ['sender_name','sender_details','receiver_name','receiver_details','service_type','origin','destination','package_type','weight','quantity','driver_id','vehicle_id','status','current_location','estimated_delivery','price','currency','carrier','dimensions','description'].forEach(function (k) {
             var el = f.elements[k];
             if (el && s[k] !== null && s[k] !== undefined) el.value = s[k];
         });
+        setImagePreview(s.package_image || null);
         modal.show();
     });
 }
@@ -303,14 +345,27 @@ function openDetail(id) {
                 '</div>';
         }).join('') || '<p class="text-muted-2">No events yet.</p>';
 
+        var pkgImg = s.package_image
+            ? '<?= base_url('') ?>' + String(s.package_image).replace(/^\//, '')
+            : '<?= base_url('assets/img/packages/') ?>' + (['document','parcel','pallet','container'].indexOf(s.package_type) >= 0 ? s.package_type : 'parcel') + '.jpg';
+
         document.getElementById('detailBody').innerHTML =
             '<div class="d-flex justify-content-between align-items-start mb-3">' +
                 '<div><div class="text-muted-2 small text-uppercase">Tracking #</div><div class="fs-5 fw-bold font-monospace">' + s.tracking_number + '</div></div>' +
                 statusBadge(s.status) + '</div>' +
+            '<div class="mb-3"><div class="text-muted-2 small text-uppercase mb-1">Package</div>' +
+                '<img src="' + pkgImg + '" alt="Package photo" class="rounded border" style="width:140px;height:140px;object-fit:cover;"></div>' +
+            '<div class="row small mb-3">' +
+                '<div class="col-md-6 mb-2"><div class="text-muted-2 small text-uppercase">Sender</div>' +
+                    '<div class="fw-semibold">' + esc(s.sender_name || s.customer_name || '—') + '</div>' +
+                    (s.sender_details ? '<div class="text-muted-2" style="white-space:pre-line;">' + esc(s.sender_details) + '</div>' : '') + '</div>' +
+                '<div class="col-md-6 mb-2"><div class="text-muted-2 small text-uppercase">Receiver</div>' +
+                    '<div class="fw-semibold">' + esc(s.receiver_name || '—') + '</div>' +
+                    (s.receiver_details ? '<div class="text-muted-2" style="white-space:pre-line;">' + esc(s.receiver_details) + '</div>' : '') + '</div>' +
+            '</div>' +
             '<div class="row small mb-4">' +
                 '<div class="col-6 mb-2"><span class="text-muted-2">Origin:</span> ' + (s.origin||'—') + '</div>' +
                 '<div class="col-6 mb-2"><span class="text-muted-2">Destination:</span> ' + (s.destination||'—') + '</div>' +
-                '<div class="col-6 mb-2"><span class="text-muted-2">Customer:</span> ' + (s.customer_name||'—') + '</div>' +
                 '<div class="col-6 mb-2"><span class="text-muted-2">Driver:</span> ' + (s.driver_name||'—') + '</div>' +
                 '<div class="col-6 mb-2"><span class="text-muted-2">Vehicle:</span> ' + (s.vehicle_name||'—') + '</div>' +
                 '<div class="col-6 mb-2"><span class="text-muted-2">Weight:</span> ' + (s.weight||'—') + ' kg</div>' +

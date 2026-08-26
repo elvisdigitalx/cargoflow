@@ -414,47 +414,152 @@ a:hover { color: var(--cf-brand-dark); }
 /* ------------------------------------------------------------------ */
 /* Floating language switcher (Google Translate)                       */
 /* ------------------------------------------------------------------ */
+/* Minimal floating language switcher — fixed on the left edge */
 .cf-lang-switcher {
     position: fixed;
-    left: 14px;
+    left: 12px;
     top: 50%;
     transform: translateY(-50%);
     z-index: 1060;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: .4rem;
 }
-.cf-lang-switcher .goog-te-gadget { font-size: 0; line-height: 0; }
-.cf-lang-switcher .goog-te-gadget-simple {
-    display: inline-flex !important;
-    align-items: center;
-    gap: .45rem;
+/* Hidden Google Translate host element (we drive its combo programmatically) */
+.cf-lang-switcher .cf-lang-gte {
+    position: absolute;
+    width: 1px; height: 1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    clip-path: inset(50%);
+    white-space: nowrap;
+}
+.cf-lang-btn {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    border: 1px solid var(--cf-border);
     background: var(--cf-surface);
-    border: 1.5px solid var(--cf-border);
-    border-radius: 999px;
-    padding: .6rem .95rem;
-    box-shadow: var(--cf-shadow);
-    font-size: .85rem;
-    font-weight: 600;
     color: var(--cf-text);
+    box-shadow: var(--cf-shadow);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.05rem;
     cursor: pointer;
     transition: border-color .2s ease, box-shadow .2s ease, transform .2s ease;
 }
-.cf-lang-switcher .goog-te-gadget-simple:hover {
+.cf-lang-btn:hover {
     border-color: var(--cf-brand);
     box-shadow: var(--cf-shadow-lg);
-    transform: translateX(2px);
+    transform: scale(1.05);
 }
-.cf-lang-switcher .goog-te-gadget-simple::before {
-    content: "🌐";
-    font-size: 1rem;
-    line-height: 1;
+.cf-lang-btn .cf-lang-current {
+    font-size: .62rem;
+    font-weight: 800;
+    letter-spacing: .04em;
+    text-transform: uppercase;
+    position: absolute;
+    bottom: -2px;
+    right: -4px;
+    background: var(--cf-brand);
+    color: #fff;
+    border-radius: 999px;
+    padding: 1px 5px;
+    line-height: 1.25;
+    pointer-events: none;
 }
-.cf-lang-switcher .goog-te-gadget-simple img,
-.cf-lang-switcher .goog-te-gadget-icon { display: none !important; }
-.cf-lang-switcher .goog-te-menu-value { color: var(--cf-text) !important; }
-.cf-lang-switcher .goog-te-menu-value span { color: inherit !important; }
-.cf-lang-switcher .goog-logo-link { display: none !important; }
+.cf-lang-menu {
+    display: none;
+    flex-direction: column;
+    background: var(--cf-surface);
+    border: 1px solid var(--cf-border);
+    border-radius: 12px;
+    box-shadow: var(--cf-shadow-lg);
+    padding: .3rem;
+    max-height: min(60vh, 380px);
+    overflow-y: auto;
+    min-width: 118px;
+}
+.cf-lang-switcher.open .cf-lang-menu { display: flex; }
+.cf-lang-menu button {
+    border: 0;
+    background: transparent;
+    color: var(--cf-text);
+    font-size: .8rem;
+    font-weight: 600;
+    text-align: left;
+    padding: .35rem .6rem;
+    border-radius: 8px;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: background .15s ease, color .15s ease;
+}
+.cf-lang-menu button:hover { background: var(--cf-surface-2); color: var(--cf-brand); }
+.cf-lang-menu button.active { background: var(--cf-brand); color: #fff; }
 /* Keep the design clean while a translation is active */
-.goog-te-banner-frame { display: none !important; }
+.goog-te-banner-frame,
+#goog-gt-tt, .goog-te-balloon-frame,
+body > iframe.skiptranslate { display: none !important; }
 body { top: 0 !important; }
+font img.goog-te-highlight { box-shadow: none !important; background: transparent !important; }
+@media (max-width: 575.98px) {
+    .cf-lang-switcher { left: 8px; }
+    .cf-lang-btn { width: 36px; height: 36px; font-size: .95rem; }
+}
+
+/* ------------------------------------------------------------------ */
+/* Page preloader                                                      */
+/* ------------------------------------------------------------------ */
+.cf-preloader {
+    position: fixed;
+    inset: 0;
+    z-index: 2000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--cf-surface);
+    transition: opacity .45s ease, visibility .45s ease;
+}
+.cf-preloader.done {
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+}
+.cf-preloader-inner {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+}
+.cf-preloader-inner svg { animation: cfPulse 1.2s ease-in-out infinite; }
+.cf-preloader-bar {
+    width: 120px;
+    height: 4px;
+    border-radius: 999px;
+    background: var(--cf-border);
+    overflow: hidden;
+}
+.cf-preloader-bar span {
+    display: block;
+    height: 100%;
+    width: 40%;
+    border-radius: 999px;
+    background: var(--cf-grad);
+    animation: cfSlide 1.1s ease-in-out infinite;
+}
+@keyframes cfPulse {
+    0%, 100% { transform: scale(1); opacity: 1; }
+    50% { transform: scale(.9); opacity: .75; }
+}
+@keyframes cfSlide {
+    0% { transform: translateX(-120%); }
+    100% { transform: translateX(320%); }
+}
+@media (prefers-reduced-motion: reduce) {
+    .cf-preloader { display: none !important; }
+}
 
 /* ------------------------------------------------------------------ */
 /* Toast                                                               */
@@ -467,8 +572,11 @@ body { top: 0 !important; }
 /* ------------------------------------------------------------------ */
 /* Reveal-on-scroll animations                                         */
 /* ------------------------------------------------------------------ */
-.reveal { opacity: 0; transform: translateY(24px); transition: opacity .6s ease, transform .6s ease; }
-.reveal.in { opacity: 1; transform: translateY(0); }
+/* Content is visible by default; it's only hidden for the entrance
+   animation when JS is confirmed running (html.cf-js), so shipment
+   results and sections can never be stuck invisible. */
+html.cf-js .reveal { opacity: 0; transform: translateY(24px); transition: opacity .6s ease, transform .6s ease; }
+html.cf-js .reveal.in { opacity: 1; transform: translateY(0); }
 
 /* ------------------------------------------------------------------ */
 /* Responsive tweaks                                                   */
@@ -479,6 +587,38 @@ body { top: 0 !important; }
     .float-card { display: none; }
 }
 
+
+/* ------------------------------------------------------------------ */
+/* Tracking result — package photo                                     */
+/* ------------------------------------------------------------------ */
+.package-photo {
+    position: relative;
+    border-radius: 14px;
+    overflow: hidden;
+    border: 1px solid var(--cf-border);
+    background: var(--cf-surface-2);
+}
+.package-photo img {
+    display: block;
+    width: 100%;
+    height: 190px;
+    object-fit: cover;
+}
+.package-photo-tag {
+    position: absolute;
+    left: 10px;
+    bottom: 10px;
+    display: inline-flex;
+    align-items: center;
+    background: rgba(15, 23, 42, .72);
+    color: #fff;
+    font-size: .72rem;
+    font-weight: 600;
+    letter-spacing: .03em;
+    padding: .3rem .6rem;
+    border-radius: 999px;
+    backdrop-filter: blur(4px);
+}
 
 /* ------------------------------------------------------------------ */
 /* Page imagery                                                        */

@@ -8,6 +8,7 @@ require_once __DIR__ . '/../includes/bootstrap.php';
 require_once __DIR__ . '/../includes/api.php';
 
 api_require_admin();
+ensure_shipment_columns();
 
 $action = $_GET['action'] ?? ($_POST['action'] ?? 'list');
 
@@ -20,9 +21,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' || $action === 'list') {
     $params = [];
 
     if ($search !== '') {
-        $where[] = '(s.tracking_number LIKE ? OR c.name LIKE ? OR s.destination LIKE ? OR s.origin LIKE ?)';
+        $searchCols = ['s.tracking_number', 'c.name', 's.destination', 's.origin'];
+        if (shipment_column_exists('sender_name')) {
+            $searchCols[] = 's.sender_name';
+        }
+        if (shipment_column_exists('receiver_name')) {
+            $searchCols[] = 's.receiver_name';
+        }
         $like = '%' . $search . '%';
-        array_push($params, $like, $like, $like, $like);
+        $where[] = '(' . implode(' LIKE ? OR ', $searchCols) . ' LIKE ?)';
+        foreach ($searchCols as $ignored) {
+            $params[] = $like;
+        }
     }
     if ($status !== '') {
         $where[] = 's.status = ?';
@@ -61,16 +71,22 @@ if ($action === 'create') {
 
     $tracking = generate_tracking_number();
     $status = trim($input['status'] ?? 'pending');
+    $packageImage = save_package_image_upload();
 
-    $id = insertRow('shipments', [
+    $newShipment = [
         'tracking_number'    => $tracking,
         'customer_id'        => !empty($input['customer_id']) ? (int) $input['customer_id'] : null,
+        'sender_name'        => trim($input['sender_name'] ?? ''),
+        'sender_details'     => trim($input['sender_details'] ?? ''),
+        'receiver_name'      => trim($input['receiver_name'] ?? ''),
+        'receiver_details'   => trim($input['receiver_details'] ?? ''),
         'origin'             => $origin,
         'destination'        => $destination,
         'origin_address'     => trim($input['origin_address'] ?? ''),
         'destination_address'=> trim($input['destination_address'] ?? ''),
         'service_type'       => trim($input['service_type'] ?? 'standard'),
         'package_type'       => trim($input['package_type'] ?? 'parcel'),
+        'package_image'      => $packageImage,
         'weight'             => is_numeric($input['weight'] ?? '') ? (float) $input['weight'] : null,
         'dimensions'         => trim($input['dimensions'] ?? ''),
         'quantity'           => max(1, (int) ($input['quantity'] ?? 1)),
@@ -86,7 +102,17 @@ if ($action === 'create') {
         'currency'           => trim($input['currency'] ?? 'USD'),
         'notes'              => trim($input['notes'] ?? ''),
         'created_by'         => $_SESSION['user_id'] ?? null,
-    ]);
+    ];
+
+    // Drop columns the live DB doesn't have yet (auto-migration may have
+    // been blocked by missing ALTER privileges).
+    foreach (['package_image', 'sender_name', 'sender_details', 'receiver_name', 'receiver_details'] as $newCol) {
+        if (!shipment_column_exists($newCol)) {
+            unset($newShipment[$newCol]);
+        }
+    }
+
+    $id = insertRow('shipments', $newShipment);
 
     // Initial tracking event
     insertRow('tracking_events', [
@@ -107,7 +133,8 @@ if ($action === 'update') {
     $id = api_id();
     $input = api_input();
     $allowed = [
-        'customer_id', 'origin', 'destination', 'origin_address', 'destination_address',
+        'customer_id', 'sender_name', 'sender_details', 'receiver_name', 'receiver_details',
+        'origin', 'destination', 'origin_address', 'destination_address',
         'service_type', 'package_type', 'weight', 'dimensions', 'quantity', 'description',
         'carrier', 'driver_id', 'vehicle_id', 'status', 'current_location',
         'estimated_delivery', 'shipped_at', 'delivered_at', 'price', 'currency', 'notes',
@@ -118,7 +145,7 @@ if ($action === 'update') {
             $val = $input[$field];
             if ($val === '' || $val === null) {
                 // allow nullable clears for FK-ish/date fields
-                if (in_array($field, ['customer_id', 'driver_id', 'vehicle_id', 'estimated_delivery', 'shipped_at', 'delivered_at', 'origin_address', 'destination_address', 'dimensions', 'notes'])) {
+                if (in_array($field, ['customer_id', 'driver_id', 'vehicle_id', 'estimated_delivery', 'shipped_at', 'delivered_at', 'origin_address', 'destination_address', 'dimensions', 'notes', 'sender_name', 'sender_details', 'receiver_name', 'receiver_details'])) {
                     $data[$field] = null;
                 } elseif (in_array($field, ['weight', 'price'])) {
                     $data[$field] = null;
@@ -128,6 +155,26 @@ if ($action === 'update') {
                 continue;
             }
             $data[$field] = $val;
+        }
+    }
+
+    // Drop columns the live DB doesn't have yet.
+    foreach (['sender_name', 'sender_details', 'receiver_name', 'receiver_details'] as $newCol) {
+        if (!shipment_column_exists($newCol)) {
+            unset($data[$newCol]);
+        }
+    }
+
+    // Package photo: replace on new upload, or clear when requested.
+    if (shipment_column_exists('package_image')) {
+        $newImage = save_package_image_upload();
+        $current = fetchOne('SELECT package_image FROM shipments WHERE id = ?', [$id]);
+        if ($newImage !== null) {
+            delete_package_image_file($current['package_image'] ?? null);
+            $data['package_image'] = $newImage;
+        } elseif (!empty($input['remove_package_image'])) {
+            delete_package_image_file($current['package_image'] ?? null);
+            $data['package_image'] = null;
         }
     }
 
@@ -180,6 +227,10 @@ if ($action === 'add_event') {
 
 if ($action === 'delete') {
     $id = api_id();
+    if (shipment_column_exists('package_image')) {
+        $current = fetchOne('SELECT package_image FROM shipments WHERE id = ?', [$id]);
+        delete_package_image_file($current['package_image'] ?? null);
+    }
     // tracking_events cascade via FK; remove invoice/payment references first.
     query('DELETE FROM payments WHERE invoice_id IN (SELECT id FROM invoices WHERE shipment_id = ?)', [$id]);
     query('DELETE FROM invoices WHERE shipment_id = ?', [$id]);

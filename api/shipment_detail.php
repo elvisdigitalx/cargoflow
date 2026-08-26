@@ -7,6 +7,7 @@ require_once __DIR__ . '/../includes/bootstrap.php';
 require_once __DIR__ . '/../includes/api.php';
 
 api_require_admin();
+ensure_shipment_columns();
 
 $id = (int) ($_GET['id'] ?? $_POST['id'] ?? 0);
 if ($id <= 0) {

@@ -11,7 +11,6 @@ require_login();
 $adminPage = 'index';
 $adminTitle = 'Dashboard';
 
-$customers = fetchAll('SELECT id, name FROM customers ORDER BY name ASC');
 $statuses = shipment_statuses();
 
 $hour = (int) date('G');
@@ -176,14 +175,21 @@ require __DIR__ . '/includes/header.php';
                     <?= csrf_field() ?>
                     <input type="hidden" name="action" value="create">
                     <div class="row g-2">
-                        <div class="col-12">
-                            <label class="form-label">Customer</label>
-                            <select class="form-select" name="customer_id">
-                                <option value="">— Walk-in / none —</option>
-                                <?php foreach ($customers as $c): ?>
-                                    <option value="<?= (int) $c['id'] ?>"><?= e($c['name']) ?></option>
-                                <?php endforeach; ?>
-                            </select>
+                        <div class="col-md-6">
+                            <label class="form-label">Sender name</label>
+                            <input type="text" class="form-control" name="sender_name" placeholder="Full name / company">
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Receiver name</label>
+                            <input type="text" class="form-control" name="receiver_name" placeholder="Full name / company">
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Sender details</label>
+                            <textarea class="form-control" name="sender_details" rows="2" placeholder="Phone, email, address…"></textarea>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Receiver details</label>
+                            <textarea class="form-control" name="receiver_details" rows="2" placeholder="Phone, email, address…"></textarea>
                         </div>
                         <div class="col-md-6">
                             <label class="form-label">Origin *</label>
@@ -253,7 +259,7 @@ require __DIR__ . '/includes/header.php';
             </div>
             <div class="table-responsive">
                 <table class="table table-admin">
-                    <thead><tr><th>Tracking</th><th>Customer</th><th>Destination</th><th>Status</th></tr></thead>
+                    <thead><tr><th>Tracking</th><th>Sender</th><th>Destination</th><th>Status</th></tr></thead>
                     <tbody id="recentShipments"><tr><td colspan="4" class="text-center text-muted-2 py-4">Loading…</td></tr></tbody>
                 </table>
             </div>
@@ -477,7 +483,12 @@ require __DIR__ . '/includes/header.php';
 
     function refreshStats() {
         CF.api('<?= base_url('api/stats.php') ?>').then(function (json) {
-            if (!json.success) { CF.toast('Could not load stats.', 'danger'); return; }
+            if (!json.success || !json.data || !json.data.kpis) {
+                var err = '<tr><td colspan="4" class="text-center text-muted-2 py-4">Could not load data — <a href="#" onclick="location.reload();return false;">retry</a></td></tr>';
+                document.getElementById('recentShipments').innerHTML = err;
+                document.getElementById('recentPayments').innerHTML = err.replace('colspan="4"', 'colspan="3"');
+                return;
+            }
             stats = json.data;
             render();
         });

@@ -1,0 +1,8 @@
+# Uploads are static files only — never execute scripts here.
+<IfModule mod_php.c>
+    php_flag engine off
+</IfModule>
+<FilesMatch "\.(php|phtml|php\d|pl|py|cgi|sh)$">
+    Require all denied
+</FilesMatch>
+Options -Indexes
