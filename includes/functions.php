@@ -300,6 +300,106 @@ if (!function_exists('generate_tracking_number')) {
     }
 }
 
+// ---------------------------------------------------------------------
+// Package images
+// ---------------------------------------------------------------------
+if (!function_exists('ensure_package_image_column')) {
+    /**
+     * Auto-migrate: make sure shipments.package_image exists.
+     * Safe to call on every request that touches the column (cached per request).
+     */
+    function ensure_package_image_column(): void
+    {
+        static $done = false;
+        if ($done) {
+            return;
+        }
+        $done = true;
+        try {
+            $col = fetchOne("SHOW COLUMNS FROM `shipments` LIKE 'package_image'");
+            if (!$col) {
+                query("ALTER TABLE `shipments` ADD COLUMN `package_image` VARCHAR(255) DEFAULT NULL AFTER `package_type`");
+            }
+        } catch (Throwable $e) {
+            // Table may not exist yet (installer) — ignore.
+        }
+    }
+}
+
+if (!function_exists('package_image_url')) {
+    /**
+     * Resolve the image shown for a shipment's package: the admin-uploaded
+     * photo when available, otherwise a default illustration per package type.
+     */
+    function package_image_url(?array $shipment): string
+    {
+        if ($shipment && !empty($shipment['package_image'])) {
+            return base_url(ltrim((string) $shipment['package_image'], '/'));
+        }
+        $type = strtolower((string) ($shipment['package_type'] ?? 'parcel'));
+        if (!in_array($type, ['document', 'parcel', 'pallet', 'container'], true)) {
+            $type = 'parcel';
+        }
+        return base_url('assets/img/packages/' . $type . '.jpg');
+    }
+}
+
+if (!function_exists('save_package_image_upload')) {
+    /**
+     * Validate and store an uploaded package photo.
+     * Returns the project-relative path (e.g. uploads/packages/pkg_xxx.jpg) or null.
+     */
+    function save_package_image_upload(string $field = 'package_image'): ?string
+    {
+        if (empty($_FILES[$field]) || (int) ($_FILES[$field]['error'] ?? UPLOAD_ERR_NO_FILE) !== UPLOAD_ERR_OK) {
+            return null;
+        }
+        $file = $_FILES[$field];
+        if (($file['size'] ?? 0) <= 0 || $file['size'] > 5 * 1024 * 1024) {
+            return null;
+        }
+        $info = @getimagesize($file['tmp_name']);
+        if (!$info) {
+            return null;
+        }
+        $extByMime = [
+            'image/jpeg' => 'jpg',
+            'image/png'  => 'png',
+            'image/webp' => 'webp',
+            'image/gif'  => 'gif',
+        ];
+        $mime = $info['mime'] ?? '';
+        if (!isset($extByMime[$mime])) {
+            return null;
+        }
+        $dir = dirname(__DIR__) . '/uploads/packages';
+        if (!is_dir($dir) && !@mkdir($dir, 0755, true)) {
+            return null;
+        }
+        $name = 'pkg_' . date('Ymd') . '_' . bin2hex(random_bytes(6)) . '.' . $extByMime[$mime];
+        if (!@move_uploaded_file($file['tmp_name'], $dir . '/' . $name)) {
+            return null;
+        }
+        return 'uploads/packages/' . $name;
+    }
+}
+
+if (!function_exists('delete_package_image_file')) {
+    /**
+     * Remove a previously uploaded package photo (never touches defaults).
+     */
+    function delete_package_image_file(?string $path): void
+    {
+        if (!$path || strpos($path, 'uploads/packages/') !== 0 || strpos($path, '..') !== false) {
+            return;
+        }
+        $full = dirname(__DIR__) . '/' . $path;
+        if (is_file($full)) {
+            @unlink($full);
+        }
+    }
+}
+
 if (!function_exists('generate_invoice_number')) {
     function generate_invoice_number(): string
     {

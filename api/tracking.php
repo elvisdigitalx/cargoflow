@@ -6,6 +6,8 @@
  */
 require_once __DIR__ . '/../includes/bootstrap.php';
 
+ensure_package_image_column();
+
 $tracking = trim($_GET['tracking'] ?? ($_POST['tracking'] ?? ''));
 
 if ($tracking === '') {
@@ -48,6 +50,7 @@ json_response([
         'current_location'=> $shipment['current_location'],
         'service_type'    => $shipment['service_type'],
         'package_type'    => $shipment['package_type'],
+        'package_image'   => package_image_url($shipment),
         'weight'          => $shipment['weight'],
         'dimensions'      => $shipment['dimensions'],
         'quantity'        => (int) $shipment['quantity'],

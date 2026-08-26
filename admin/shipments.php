@@ -68,7 +68,7 @@ require __DIR__ . '/includes/header.php';
 <div class="modal fade" id="shipmentModal" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-lg modal-dialog-scrollable">
         <div class="modal-content">
-            <form data-modal-form action="<?= base_url('api/shipments.php') ?>" data-on-success="onShipmentSaved">
+            <form data-modal-form action="<?= base_url('api/shipments.php') ?>" data-on-success="onShipmentSaved" enctype="multipart/form-data">
                 <?= csrf_field() ?>
                 <input type="hidden" name="action" id="shipmentAction" value="create">
                 <input type="hidden" name="id" id="shipmentId" value="">
@@ -173,6 +173,20 @@ require __DIR__ . '/includes/header.php';
                             <label class="form-label">Description / contents</label>
                             <textarea class="form-control" name="description" id="f_description" rows="2"></textarea>
                         </div>
+                        <div class="col-12">
+                            <label class="form-label">Package photo <span class="text-muted-2 fw-normal">(optional — shown on the public tracking page)</span></label>
+                            <div class="d-flex align-items-start gap-3 flex-wrap">
+                                <img id="f_image_preview" src="" alt="Package photo preview" class="rounded border d-none" style="width:96px;height:96px;object-fit:cover;">
+                                <div class="flex-grow-1">
+                                    <input type="file" class="form-control" name="package_image" id="f_image" accept="image/jpeg,image/png,image/webp,image/gif">
+                                    <div class="form-check mt-2 d-none" id="f_image_remove_wrap">
+                                        <input class="form-check-input" type="checkbox" name="remove_package_image" value="1" id="f_image_remove">
+                                        <label class="form-check-label small" for="f_image_remove">Remove current photo</label>
+                                    </div>
+                                    <div class="text-muted-2 small mt-1">JPG, PNG, WEBP or GIF — max 5 MB. If none is uploaded, a default image for the package type is shown.</div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
                 <div class="modal-footer">
@@ -247,6 +261,21 @@ function renderPagination(meta) {
 }
 function goPage(p) { state.page = p; loadShipments(); }
 
+function setImagePreview(path) {
+    var img = document.getElementById('f_image_preview');
+    var removeWrap = document.getElementById('f_image_remove_wrap');
+    document.getElementById('f_image_remove').checked = false;
+    if (path) {
+        img.src = '<?= base_url('') ?>' + path.replace(/^\//, '');
+        img.classList.remove('d-none');
+        removeWrap.classList.remove('d-none');
+    } else {
+        img.src = '';
+        img.classList.add('d-none');
+        removeWrap.classList.add('d-none');
+    }
+}
+
 function openCreate() {
     document.getElementById('shipmentModalTitle').textContent = 'New Shipment';
     document.getElementById('shipmentAction').value = 'create';
@@ -257,6 +286,7 @@ function openCreate() {
     document.getElementById('f_status').value = 'pending';
     document.getElementById('f_currency').value = 'USD';
     document.getElementById('f_quantity').value = '1';
+    setImagePreview(null);
 }
 function openEdit(id) {
     CF.api('<?= base_url('api/shipment_detail.php') ?>?id=' + id).then(function (json) {
@@ -271,6 +301,7 @@ function openEdit(id) {
             var el = f.elements[k];
             if (el && s[k] !== null && s[k] !== undefined) el.value = s[k];
         });
+        setImagePreview(s.package_image || null);
         modal.show();
     });
 }
@@ -303,10 +334,16 @@ function openDetail(id) {
                 '</div>';
         }).join('') || '<p class="text-muted-2">No events yet.</p>';
 
+        var pkgImg = s.package_image
+            ? '<?= base_url('') ?>' + String(s.package_image).replace(/^\//, '')
+            : '<?= base_url('assets/img/packages/') ?>' + (['document','parcel','pallet','container'].indexOf(s.package_type) >= 0 ? s.package_type : 'parcel') + '.jpg';
+
         document.getElementById('detailBody').innerHTML =
             '<div class="d-flex justify-content-between align-items-start mb-3">' +
                 '<div><div class="text-muted-2 small text-uppercase">Tracking #</div><div class="fs-5 fw-bold font-monospace">' + s.tracking_number + '</div></div>' +
                 statusBadge(s.status) + '</div>' +
+            '<div class="mb-3"><div class="text-muted-2 small text-uppercase mb-1">Package</div>' +
+                '<img src="' + pkgImg + '" alt="Package photo" class="rounded border" style="width:140px;height:140px;object-fit:cover;"></div>' +
             '<div class="row small mb-4">' +
                 '<div class="col-6 mb-2"><span class="text-muted-2">Origin:</span> ' + (s.origin||'—') + '</div>' +
                 '<div class="col-6 mb-2"><span class="text-muted-2">Destination:</span> ' + (s.destination||'—') + '</div>' +

@@ -65,6 +65,19 @@ foreach ($navSections as $items) {
     <link href="<?= base_url('admin/assets/admin.css') ?>" rel="stylesheet">
 </head>
 <body class="admin">
+
+<!-- Page preloader -->
+<noscript><style>.cf-preloader{display:none !important;}</style></noscript>
+<div class="cf-preloader" id="cfPreloader" aria-hidden="true">
+    <div class="cf-preloader-inner">
+        <svg width="52" height="52" viewBox="0 0 32 32" fill="none" aria-hidden="true">
+            <rect x="1" y="1" width="30" height="30" rx="8" fill="#e82127"/>
+            <path d="M9 20l4-8 3 6 3-6 4 8" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+        </svg>
+        <div class="cf-preloader-bar"><span></span></div>
+    </div>
+</div>
+
 <div class="admin-wrapper">
 
     <!-- ============ SIDEBAR ============ -->

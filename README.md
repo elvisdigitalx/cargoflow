@@ -18,6 +18,9 @@ patterns + vanilla JavaScript**. No frameworks, no React, no Node backend, no SQ
 **Public website**
 - Beautiful, fully responsive homepage with hero + inline tracking
 - Shipment tracking page (tracking number lookup, real-time timeline + embedded map)
+- Tracking result shows a package photo (admin-uploaded, or a default image per package type)
+- Branded page preloader on every page (public, login and admin)
+- Minimal fixed language switcher on the left edge (Google Translate powered, 12 languages)
 - Get a Quote page (AJAX submission with instant price estimate)
 - Services, About and Contact pages
 - Dark mode toggle (persisted), reveal-on-scroll animations, animated counters
@@ -26,6 +29,7 @@ patterns + vanilla JavaScript**. No frameworks, no React, no Node backend, no SQ
 - Secure login / logout with hashed passwords (bcrypt) & CSRF protection
 - Modern dashboard with KPI cards and Chart.js visualizations
 - Shipments — full CRUD, automatic tracking-number generation (`CF-XXXXXXXXXX`)
+- Package photo upload per shipment (JPG/PNG/WEBP/GIF, max 5 MB, stored in `uploads/packages/`)
 - Tracking status / event management (add events, sync status & location)
 - Customers, Drivers & Vehicles management
 - Invoices & Payments (auto tax/total calculation, mark-paid, reconciliation)

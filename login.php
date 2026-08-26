@@ -55,6 +55,19 @@ $cf_theme = current_theme();
     </style>
 </head>
 <body>
+
+<!-- Page preloader -->
+<noscript><style>.cf-preloader{display:none !important;}</style></noscript>
+<div class="cf-preloader" id="cfPreloader" aria-hidden="true">
+    <div class="cf-preloader-inner">
+        <svg width="52" height="52" viewBox="0 0 32 32" fill="none" aria-hidden="true">
+            <rect x="1" y="1" width="30" height="30" rx="8" fill="#e82127"/>
+            <path d="M9 20l4-8 3 6 3-6 4 8" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+        </svg>
+        <div class="cf-preloader-bar"><span></span></div>
+    </div>
+</div>
+
 <div class="auth-wrap">
     <div class="auth-card">
         <div class="text-center mb-4">
@@ -109,6 +122,17 @@ document.getElementById('togglePass').addEventListener('click', function () {
     var p = document.getElementById('password');
     p.type = p.type === 'password' ? 'text' : 'password';
 });
+(function () {
+    function hidePreloader() {
+        var pre = document.getElementById('cfPreloader');
+        if (!pre || pre.classList.contains('done')) return;
+        pre.classList.add('done');
+        setTimeout(function () { if (pre.parentNode) pre.parentNode.removeChild(pre); }, 600);
+    }
+    if (document.readyState === 'complete') hidePreloader();
+    else { window.addEventListener('load', hidePreloader); setTimeout(hidePreloader, 4000); }
+    window.addEventListener('pageshow', function (e) { if (e.persisted) hidePreloader(); });
+})();
 </script>
 </body>
 </html>

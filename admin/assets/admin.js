@@ -6,6 +6,21 @@
 
     var CSRF = (document.querySelector('meta[name="csrf-token"]') || {}).content || '';
 
+    /* ---------------- Page preloader ---------------- */
+    function hidePreloader() {
+        var pre = document.getElementById('cfPreloader');
+        if (!pre || pre.classList.contains('done')) return;
+        pre.classList.add('done');
+        setTimeout(function () { if (pre.parentNode) pre.parentNode.removeChild(pre); }, 600);
+    }
+    if (document.readyState === 'complete') {
+        hidePreloader();
+    } else {
+        window.addEventListener('load', hidePreloader);
+        setTimeout(hidePreloader, 4000);
+    }
+    window.addEventListener('pageshow', function (e) { if (e.persisted) hidePreloader(); });
+
     /* ---------------- Theme ---------------- */
     function applyTheme(theme) {
         document.documentElement.setAttribute('data-bs-theme', theme);
@@ -74,9 +89,13 @@
             headers: { 'X-Requested-With': 'XMLHttpRequest', 'X-CSRF-Token': CSRF }
         };
         if (data) {
-            var body = new FormData();
-            Object.keys(data).forEach(function (k) { body.append(k, data[k] === null || data[k] === undefined ? '' : data[k]); });
-            opts.body = body;
+            if (data instanceof FormData) {
+                opts.body = data;
+            } else {
+                var body = new FormData();
+                Object.keys(data).forEach(function (k) { body.append(k, data[k] === null || data[k] === undefined ? '' : data[k]); });
+                opts.body = body;
+            }
         }
         return fetch(url, opts).then(function (res) {
             return res.json().catch(function () { return {}; });
@@ -93,8 +112,8 @@
         var btn = form.querySelector('[type="submit"]');
         var orig = btn ? btn.innerHTML : '';
         if (btn) { btn.disabled = true; btn.innerHTML = '<span class="spinner-border spinner-border-sm me-1"></span>Saving…'; }
-        var data = {};
-        new FormData(form).forEach(function (v, k) { data[k] = v; });
+        // Send the raw FormData so file inputs (e.g. package photo) are preserved.
+        var data = new FormData(form);
         api(form.getAttribute('action'), data).then(function (json) {
             if (json.success === false) {
                 toast(json.message || 'Error', 'danger');

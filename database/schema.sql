@@ -104,6 +104,7 @@ CREATE TABLE `shipments` (
   `destination_address` TEXT,
   `service_type` ENUM('standard','express','overnight','freight','air','sea') NOT NULL DEFAULT 'standard',
   `package_type` ENUM('document','parcel','pallet','container') NOT NULL DEFAULT 'parcel',
+  `package_image` VARCHAR(255) DEFAULT NULL,
   `weight` DECIMAL(10,2) DEFAULT NULL,
   `dimensions` VARCHAR(60) DEFAULT NULL,
   `quantity` INT UNSIGNED NOT NULL DEFAULT 1,

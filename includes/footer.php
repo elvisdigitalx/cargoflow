@@ -69,21 +69,25 @@ $cf_site_address = setting('site_address', '100 Logistics Way, San Francisco, CA
 
 <div class="cf-toast" aria-live="polite" aria-atomic="true"></div>
 
-<!-- Floating language switcher (Google Translate) -->
-<div class="cf-lang-switcher" id="cfLangSwitcher">
-    <div id="google_translate_element"></div>
+<!-- Minimal floating language switcher (fixed, left side) -->
+<div class="cf-lang-switcher notranslate" id="cfLangSwitcher" translate="no">
+    <button type="button" class="cf-lang-btn" id="cfLangBtn" aria-label="Change language" aria-haspopup="true" aria-expanded="false">
+        <i class="bi bi-globe2"></i>
+        <span class="cf-lang-current" id="cfLangCurrent">EN</span>
+    </button>
+    <div class="cf-lang-menu" id="cfLangMenu" role="menu" aria-label="Select language"></div>
+    <div class="cf-lang-gte" aria-hidden="true"><div id="google_translate_element"></div></div>
 </div>
 <script type="text/javascript">
 function googleTranslateElementInit() {
     new google.translate.TranslateElement({
         pageLanguage: 'en',
         includedLanguages: 'en,fr,es,pt,de,it,zh-CN,ar,sw,yo,ha,ig',
-        layout: google.translate.TranslateElement.InlineLayout.SIMPLE,
         autoDisplay: false
     }, 'google_translate_element');
 }
 </script>
-<script type="text/javascript" src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+<script type="text/javascript" src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit" defer></script>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 <script src="<?= base_url('assets/js/main.js') ?>"></script>

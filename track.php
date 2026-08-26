@@ -15,6 +15,7 @@ $events = [];
 $error = null;
 
 if ($tracking !== '') {
+    ensure_package_image_column();
     $shipment = fetchOne(
         'SELECT s.*, c.name AS customer_name, c.email AS customer_email,
                 d.name AS driver_name, v.name AS vehicle_name
@@ -99,6 +100,12 @@ require __DIR__ . '/includes/header.php';
                                 <div class="fs-4 fw-bold font-monospace"><?= e($shipment['tracking_number']) ?></div>
                             </div>
                             <?= status_label($shipment['status']) ?>
+                        </div>
+
+                        <!-- Package image -->
+                        <div class="package-photo mb-4">
+                            <img src="<?= e(package_image_url($shipment)) ?>" alt="Photo of the <?= e($shipment['package_type']) ?> for shipment <?= e($shipment['tracking_number']) ?>" loading="lazy">
+                            <span class="package-photo-tag"><i class="bi bi-box-seam me-1"></i><?= e(title_case($shipment['package_type'])) ?></span>
                         </div>
 
                         <div class="progress mb-1" style="height:8px;">
