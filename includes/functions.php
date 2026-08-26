@@ -40,11 +40,14 @@ if (!function_exists('base_url')) {
             $base = rtrim(BASE_URL, '/');
         } else {
             $https = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off')
-                || (isset($_SERVER['SERVER_PORT']) && $_SERVER['SERVER_PORT'] == 443);
+                || (isset($_SERVER['SERVER_PORT']) && $_SERVER['SERVER_PORT'] == 443)
+                || strtolower($_SERVER['HTTP_X_FORWARDED_PROTO'] ?? '') === 'https';
             $scheme = $https ? 'https' : 'http';
-            $host = $_SERVER['HTTP_HOST'] ?? 'localhost';
+            $host = $_SERVER['HTTP_X_FORWARDED_HOST']
+                ?? $_SERVER['HTTP_HOST']
+                ?? 'localhost';
             // Project root = parent of the includes/ directory (this file).
-            $projectRoot = str_replace('\\', '/', dirname(__DIR__, 2));
+            $projectRoot = str_replace('\\', '/', dirname(__DIR__));
             // Map the project root to a URL path relative to the document root.
             $docRoot = str_replace('\\', '/', rtrim((string) ($_SERVER['DOCUMENT_ROOT'] ?? ''), '/'));
             $basePath = '';
