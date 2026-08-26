@@ -44,6 +44,7 @@ require __DIR__ . '/includes/header.php';
                 </div>
             </div>
             <div class="col-lg-6 reveal">
+                <img class="page-visual mb-4" src="<?= base_url('assets/img/pages/about-operations.png') ?>" alt="CargoFlow operations team monitoring shipments" loading="lazy">
                 <div class="form-card p-4">
                     <div class="row g-3">
                         <div class="col-sm-6"><div class="feature-card h-100">
@@ -82,15 +83,15 @@ require __DIR__ . '/includes/header.php';
         <div class="row g-4 justify-content-center">
             <?php
             $team = [
-                ['Nadia Hussain', 'Chief Executive Officer', 'NH', 'fi-blue'],
-                ['Robert Kim', 'Head of Operations', 'RK', 'fi-green'],
-                ['Elena Petrova', 'Chief Technology Officer', 'EP', 'fi-violet'],
-                ['Kwame Mensah', 'Director of Freight', 'KM', 'fi-orange'],
+                ['Nadia Hussain', 'Chief Executive Officer', 'assets/img/avatars/team-nadia-hussain.png'],
+                ['Robert Kim', 'Head of Operations', 'assets/img/avatars/team-robert-kim.png'],
+                ['Elena Petrova', 'Chief Technology Officer', 'assets/img/avatars/team-elena-petrova.png'],
+                ['Kwame Mensah', 'Director of Freight', 'assets/img/avatars/team-kwame-mensah.png'],
             ];
             foreach ($team as $m): ?>
             <div class="col-md-6 col-lg-3 reveal">
                 <div class="feature-card text-center">
-                    <div class="feature-icon mx-auto <?= $m[3] ?>" style="width:72px;height:72px;font-size:1.5rem;"><?= $m[2] ?></div>
+                    <img class="team-avatar mx-auto mb-3" src="<?= base_url($m[2]) ?>" alt="Portrait of <?= e($m[0]) ?>" loading="lazy">
                     <h6 class="mb-1"><?= e($m[0]) ?></h6>
                     <div class="text-muted-2 small"><?= e($m[1]) ?></div>
                 </div>

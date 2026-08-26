@@ -47,6 +47,12 @@ require __DIR__ . '/includes/header.php';
             <p class="text-muted-2">Enter your tracking number for real-time status, event history and location.</p>
         </div>
 
+        <div class="row justify-content-center mb-4">
+            <div class="col-lg-9">
+                <img class="page-visual reveal" src="<?= base_url('assets/img/pages/tracking-control.png') ?>" alt="Shipment tracking route dashboard on a tablet" loading="lazy">
+            </div>
+        </div>
+
         <!-- Lookup form -->
         <div class="row justify-content-center mb-5">
             <div class="col-lg-7">

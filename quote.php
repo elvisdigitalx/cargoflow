@@ -49,6 +49,8 @@ require __DIR__ . '/includes/header.php';
                         </div>
                     </div>
 
+                    <img class="page-visual mt-4" src="<?= base_url('assets/img/pages/quote-consultant.png') ?>" alt="Logistics consultant preparing a shipping quote" loading="lazy">
+
                     <div class="mt-4 p-4 rounded-4 bg-surface-2">
                         <div class="d-flex align-items-center gap-3">
                             <div class="feature-icon fi-violet m-0"><i class="bi bi-telephone"></i></div>
