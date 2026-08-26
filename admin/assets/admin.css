@@ -45,10 +45,15 @@
 }
 
 body.admin {
-    font-family: "Plus Jakarta Sans", "Inter", system-ui, sans-serif;
+    font-family: "Inter", "Plus Jakarta Sans", system-ui, sans-serif;
     background: var(--a-surface);
     color: var(--a-text);
     min-height: 100vh;
+}
+
+body.admin h1, body.admin h2, body.admin h3, body.admin h4, body.admin h5, body.admin h6 {
+    font-family: "Space Grotesk", "Inter", sans-serif;
+    letter-spacing: -.01em;
 }
 
 /* ---------------- Layout ---------------- */
@@ -69,6 +74,7 @@ body.admin {
     display: flex; align-items: center; gap: .6rem;
     padding: 1.25rem 1.4rem;
     color: #fff; font-weight: 800; font-size: 1.25rem;
+    font-family: "Space Grotesk", "Inter", sans-serif;
     border-bottom: 1px solid rgba(255,255,255,.06);
     text-decoration: none;
 }
@@ -127,7 +133,10 @@ body.admin {
     display: flex; align-items: center; justify-content: center;
     font-size: 1.35rem; color: #fff;
 }
-.stat-card .stat-value { font-size: 1.9rem; font-weight: 800; line-height: 1; }
+.stat-card .stat-value {
+    font-size: 1.9rem; font-weight: 800; line-height: 1;
+    font-family: "Space Grotesk", "Inter", sans-serif;
+}
 .stat-card .stat-label { color: var(--a-muted); font-size: .85rem; }
 
 .bg-soft-blue   { background: rgba(232,33,39,.12); color: #e82127; }

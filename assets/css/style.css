@@ -61,13 +61,23 @@
 html { scroll-behavior: smooth; }
 
 body {
-    font-family: "Plus Jakarta Sans", "Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
+    font-family: "Inter", "Plus Jakarta Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
     background-color: var(--cf-surface);
     color: var(--cf-text);
     transition: background-color .3s ease, color .3s ease;
 }
 
-h1, h2, h3, h4, h5, h6 { font-weight: 700; letter-spacing: -.02em; }
+h1, h2, h3, h4, h5, h6,
+.display-1, .display-2, .display-3, .display-4, .display-5, .display-6 {
+    font-family: "Space Grotesk", "Inter", sans-serif;
+    font-weight: 700;
+    letter-spacing: -.02em;
+}
+
+.navbar-cf .navbar-brand,
+.stat-value, .step-num {
+    font-family: "Space Grotesk", "Inter", sans-serif;
+}
 
 a { color: var(--cf-brand); text-decoration: none; }
 a:hover { color: var(--cf-brand-dark); }
@@ -399,6 +409,51 @@ a:hover { color: var(--cf-brand-dark); }
 }
 .footer .social a:hover { background: var(--cf-brand); color: #fff; }
 .footer-bottom { border-top: 1px solid rgba(255, 255, 255, .08); margin-top: 2.5rem; padding-top: 1.5rem; }
+
+/* ------------------------------------------------------------------ */
+/* Floating language switcher (Google Translate)                       */
+/* ------------------------------------------------------------------ */
+.cf-lang-switcher {
+    position: fixed;
+    left: 14px;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 1060;
+}
+.cf-lang-switcher .goog-te-gadget { font-size: 0; line-height: 0; }
+.cf-lang-switcher .goog-te-gadget-simple {
+    display: inline-flex !important;
+    align-items: center;
+    gap: .45rem;
+    background: var(--cf-surface);
+    border: 1.5px solid var(--cf-border);
+    border-radius: 999px;
+    padding: .6rem .95rem;
+    box-shadow: var(--cf-shadow);
+    font-size: .85rem;
+    font-weight: 600;
+    color: var(--cf-text);
+    cursor: pointer;
+    transition: border-color .2s ease, box-shadow .2s ease, transform .2s ease;
+}
+.cf-lang-switcher .goog-te-gadget-simple:hover {
+    border-color: var(--cf-brand);
+    box-shadow: var(--cf-shadow-lg);
+    transform: translateX(2px);
+}
+.cf-lang-switcher .goog-te-gadget-simple::before {
+    content: "🌐";
+    font-size: 1rem;
+    line-height: 1;
+}
+.cf-lang-switcher .goog-te-gadget-simple img,
+.cf-lang-switcher .goog-te-gadget-icon { display: none !important; }
+.cf-lang-switcher .goog-te-menu-value { color: var(--cf-text) !important; }
+.cf-lang-switcher .goog-te-menu-value span { color: inherit !important; }
+.cf-lang-switcher .goog-logo-link { display: none !important; }
+/* Keep the design clean while a translation is active */
+.goog-te-banner-frame { display: none !important; }
+body { top: 0 !important; }
 
 /* ------------------------------------------------------------------ */
 /* Toast                                                               */
