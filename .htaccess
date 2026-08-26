@@ -1,0 +1,50 @@
+# =====================================================================
+#  CargoFlow — Apache configuration (cPanel / shared hosting ready)
+# =====================================================================
+
+Options -Indexes
+DirectoryIndex index.php
+
+# ---------------------------------------------------------------------
+# Security headers
+# ---------------------------------------------------------------------
+<IfModule mod_headers.c>
+    Header set X-Content-Type-Options "nosniff"
+    Header set X-Frame-Options "SAMEORIGIN"
+    Header set Referrer-Policy "strict-origin-when-cross-origin"
+</IfModule>
+
+# ---------------------------------------------------------------------
+# Block access to sensitive files/directories
+# ---------------------------------------------------------------------
+<FilesMatch "^(config\.php|.*\.sql|.*\.log|.*\.md|.*\.lock)$">
+    Require all denied
+</FilesMatch>
+
+# Block direct access to the config directory
+RedirectMatch 403 ^/config/.*$
+RedirectMatch 403 ^/database/.*$
+RedirectMatch 403 ^/includes/.*$
+
+# ---------------------------------------------------------------------
+# Pretty URLs (optional — app also works without this)
+# ---------------------------------------------------------------------
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    RewriteBase /
+
+    # Redirect /track/ABC to track.php?tracking=ABC
+    RewriteRule ^track/([A-Za-z0-9\-]+)/?$ track.php?tracking=$1 [L,QSA]
+
+    # Prevent access to hidden files
+    RewriteRule (^|/)\.(?!well-known) - [F]
+</IfModule>
+
+# ---------------------------------------------------------------------
+# PHP settings
+# ---------------------------------------------------------------------
+<IfModule mod_php.c>
+    php_flag display_errors off
+    php_value upload_max_filesize 16M
+    php_value post_max_size 20M
+</IfModule>

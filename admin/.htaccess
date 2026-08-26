@@ -1,0 +1,14 @@
+# =====================================================================
+#  CargoFlow — Admin directory (optional extra hardening)
+#  The admin itself is protected by PHP session authentication.
+# =====================================================================
+Options -Indexes
+
+<IfModule mod_headers.c>
+    Header set X-Frame-Options "DENY"
+    Header set X-Content-Type-Options "nosniff"
+</IfModule>
+
+<FilesMatch "\.(sql|log|md|lock)$">
+    Require all denied
+</FilesMatch>
