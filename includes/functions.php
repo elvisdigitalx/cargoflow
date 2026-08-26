@@ -29,6 +29,10 @@ if (!function_exists('str_contains')) {
 if (!function_exists('base_url')) {
     /**
      * Resolve an absolute URL against the configured base URL.
+     *
+     * The auto-detected base always points at the project root (the folder
+     * containing includes/), so links generated from any script depth —
+     * public pages, /admin/*.php and /api/*.php — resolve correctly.
      */
     function base_url(string $path = ''): string
     {
@@ -39,9 +43,15 @@ if (!function_exists('base_url')) {
                 || (isset($_SERVER['SERVER_PORT']) && $_SERVER['SERVER_PORT'] == 443);
             $scheme = $https ? 'https' : 'http';
             $host = $_SERVER['HTTP_HOST'] ?? 'localhost';
-            // Detect sub-folder installs (e.g. example.com/cargoflow)
-            $scriptDir = str_replace('\\', '/', dirname($_SERVER['SCRIPT_NAME'] ?? '/'));
-            $base = $scheme . '://' . $host . ($scriptDir === '/' ? '' : $scriptDir);
+            // Project root = parent of the includes/ directory (this file).
+            $projectRoot = str_replace('\\', '/', dirname(__DIR__, 2));
+            // Map the project root to a URL path relative to the document root.
+            $docRoot = str_replace('\\', '/', rtrim((string) ($_SERVER['DOCUMENT_ROOT'] ?? ''), '/'));
+            $basePath = '';
+            if ($docRoot !== '' && strpos($projectRoot, $docRoot) === 0) {
+                $basePath = substr($projectRoot, strlen($docRoot));
+            }
+            $base = $scheme . '://' . $host . $basePath;
         }
         return rtrim($base, '/') . '/' . ltrim($path, '/');
     }

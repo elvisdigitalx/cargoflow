@@ -37,7 +37,8 @@ $cf_nav   = [
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
     <!-- CargoFlow -->
     <link href="<?= base_url('assets/css/style.css') ?>" rel="stylesheet">
 </head>
@@ -49,9 +50,9 @@ $cf_nav   = [
             <span class="d-inline-flex align-items-center gap-2">
                 <span class="mark">
                     <svg width="30" height="30" viewBox="0 0 32 32" fill="none" aria-hidden="true">
-                        <rect x="1" y="1" width="30" height="30" rx="8" fill="#2563eb"/>
+                        <rect x="1" y="1" width="30" height="30" rx="8" fill="#e82127"/>
                         <path d="M9 20l4-8 3 6 3-6 4 8" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
-                        <circle cx="16" cy="20" r="1.6" fill="#06b6d4"/>
+                        <circle cx="16" cy="20" r="1.6" fill="#f97316"/>
                     </svg>
                 </span>
                 Cargo<span class="mark">Flow</span>
@@ -72,7 +73,6 @@ $cf_nav   = [
                 <button class="theme-toggle" data-theme-toggle aria-label="Toggle dark mode">
                     <i class="bi <?= $cf_theme === 'dark' ? 'bi-sun-fill' : 'bi-moon-stars-fill' ?>" data-theme-icon></i>
                 </button>
-                <a href="<?= base_url('login.php') ?>" class="btn btn-ghost btn-sm">Sign in</a>
                 <a href="<?= base_url('quote.php') ?>" class="btn btn-brand btn-sm">Get a Quote</a>
             </div>
         </div>

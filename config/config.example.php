@@ -1,18 +1,21 @@
 <?php
 /**
- * CargoFlow — Application configuration
+ * CargoFlow — Application configuration (TEMPLATE)
  * ---------------------------------------------------------------------
- * Edit these constants to match your cPanel / MySQL environment.
- * The database credentials are the ONLY values you normally need to change.
+ * Copy this file to config.php and fill in your real values:
+ *
+ *     cp config.example.php config.php
+ *
+ * config.php is excluded from git (it contains live credentials).
  */
 
 // ------------------------------------------------------------------
 // Database
 // ------------------------------------------------------------------
 define('DB_HOST', 'localhost');
-define('DB_NAME', 'cargoflow');
-define('DB_USER', 'cargoflow_user');
-define('DB_PASS', 'change_me');
+define('DB_NAME', 'your_db_name');
+define('DB_USER', 'your_db_user');
+define('DB_PASS', 'your_db_password');
 define('DB_CHARSET', 'utf8mb4');
 
 // ------------------------------------------------------------------
@@ -26,7 +29,7 @@ define('APP_VERSION', '1.0.0');
 define('BASE_URL', '');
 
 // Default timezone
-define('APP_TIMEZONE', 'UTC');
+define('APP_TIMEZONE', 'Africa/Lagos');
 
 // Session / security
 define('SESSION_NAME', 'cargoflow_session');

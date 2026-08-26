@@ -108,11 +108,36 @@ require __DIR__ . '/includes/header.php';
                             <dt class="col-5 text-muted-2 fw-semibold">Service</dt>
                             <dd class="col-7 text-capitalize"><?= e($shipment['service_type']) ?></dd>
 
+                            <dt class="col-5 text-muted-2 fw-semibold">Package type</dt>
+                            <dd class="col-7 text-capitalize"><?= e($shipment['package_type']) ?></dd>
+
+                            <?php if ($shipment['description']): ?>
+                            <dt class="col-5 text-muted-2 fw-semibold">Contents</dt>
+                            <dd class="col-7"><?= e($shipment['description']) ?></dd>
+                            <?php endif; ?>
+
+                            <dt class="col-5 text-muted-2 fw-semibold">Weight</dt>
+                            <dd class="col-7"><?= ($shipment['weight'] !== null && $shipment['weight'] !== '') ? e(number_format((float) $shipment['weight'], 2)) . ' kg' : '—' ?></dd>
+
+                            <dt class="col-5 text-muted-2 fw-semibold">Dimensions</dt>
+                            <dd class="col-7"><?= e($shipment['dimensions'] ?: '—') ?></dd>
+
+                            <dt class="col-5 text-muted-2 fw-semibold">Quantity</dt>
+                            <dd class="col-7"><?= (int) $shipment['quantity'] ?> pcs</dd>
+
                             <dt class="col-5 text-muted-2 fw-semibold">Origin</dt>
-                            <dd class="col-7"><?= e($shipment['origin'] ?: '—') ?></dd>
+                            <dd class="col-7"><?= e($shipment['origin'] ?: '—') ?>
+                                <?php if ($shipment['origin_address']): ?>
+                                <div class="text-muted-2" style="font-size:.8rem;"><?= e($shipment['origin_address']) ?></div>
+                                <?php endif; ?>
+                            </dd>
 
                             <dt class="col-5 text-muted-2 fw-semibold">Destination</dt>
-                            <dd class="col-7"><?= e($shipment['destination'] ?: '—') ?></dd>
+                            <dd class="col-7"><?= e($shipment['destination'] ?: '—') ?>
+                                <?php if ($shipment['destination_address']): ?>
+                                <div class="text-muted-2" style="font-size:.8rem;"><?= e($shipment['destination_address']) ?></div>
+                                <?php endif; ?>
+                            </dd>
 
                             <dt class="col-5 text-muted-2 fw-semibold">Current location</dt>
                             <dd class="col-7"><?= e($shipment['current_location'] ?: '—') ?></dd>
@@ -122,6 +147,16 @@ require __DIR__ . '/includes/header.php';
 
                             <dt class="col-5 text-muted-2 fw-semibold">Carrier</dt>
                             <dd class="col-7"><?= e($shipment['carrier'] ?: 'CargoFlow') ?></dd>
+
+                            <?php if ($shipment['driver_name']): ?>
+                            <dt class="col-5 text-muted-2 fw-semibold">Driver</dt>
+                            <dd class="col-7"><?= e($shipment['driver_name']) ?></dd>
+                            <?php endif; ?>
+
+                            <?php if ($shipment['vehicle_name']): ?>
+                            <dt class="col-5 text-muted-2 fw-semibold">Vehicle</dt>
+                            <dd class="col-7"><?= e($shipment['vehicle_name']) ?></dd>
+                            <?php endif; ?>
                         </dl>
 
                         <hr>

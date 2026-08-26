@@ -45,12 +45,12 @@ $cf_theme = current_theme();
     <link rel="icon" href="<?= base_url('assets/img/favicon.svg') ?>" type="image/svg+xml">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
     <link href="<?= base_url('assets/css/style.css') ?>" rel="stylesheet">
     <style>
         .auth-wrap { min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 2rem 0;
-            background: radial-gradient(900px 500px at 90% -10%, rgba(6,182,212,.15), transparent 60%),
-                        radial-gradient(800px 500px at 0% 110%, rgba(37,99,235,.15), transparent 55%), var(--cf-surface); }
+            background: radial-gradient(900px 500px at 90% -10%, rgba(249,115,22,.15), transparent 60%),
+                        radial-gradient(800px 500px at 0% 110%, rgba(232,33,39,.15), transparent 55%), var(--cf-surface); }
         .auth-card { width: 100%; max-width: 440px; }
     </style>
 </head>
@@ -59,7 +59,7 @@ $cf_theme = current_theme();
     <div class="auth-card">
         <div class="text-center mb-4">
             <a href="<?= base_url('index.php') ?>" class="navbar-brand d-inline-flex align-items-center gap-2 fs-3">
-                <svg width="34" height="34" viewBox="0 0 32 32" fill="none"><rect x="1" y="1" width="30" height="30" rx="8" fill="#2563eb"/><path d="M9 20l4-8 3 6 3-6 4 8" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>
+                <svg width="34" height="34" viewBox="0 0 32 32" fill="none"><rect x="1" y="1" width="30" height="30" rx="8" fill="#e82127"/><path d="M9 20l4-8 3 6 3-6 4 8" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>
                 CargoFlow
             </a>
         </div>
@@ -97,9 +97,6 @@ $cf_theme = current_theme();
                 <button type="submit" class="btn btn-brand w-100 py-2"><i class="bi bi-box-arrow-in-right me-1"></i> Sign in</button>
             </form>
         </div>
-        <p class="text-center text-muted-2 small mt-4 mb-0">
-            Default login: <code>admin</code> / <code>admin123</code>
-        </p>
         <p class="text-center mt-3 mb-0">
             <a href="<?= base_url('index.php') ?>" class="small"><i class="bi bi-arrow-left me-1"></i>Back to website</a>
         </p>

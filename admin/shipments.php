@@ -352,6 +352,22 @@ document.getElementById('statusFilter').addEventListener('change', function () {
 });
 document.getElementById('refreshBtn').addEventListener('click', loadShipments);
 
+// Support deep links from the dashboard (pipeline / status chart clicks).
+(function () {
+    var params = new URLSearchParams(window.location.search);
+    var st = params.get('status') || '';
+    var q = params.get('search') || '';
+    if (st) {
+        state.status = st;
+        var sel = document.getElementById('statusFilter');
+        if (sel.querySelector('option[value="' + st + '"]')) sel.value = st;
+    }
+    if (q) {
+        state.search = q;
+        document.getElementById('searchInput').value = q;
+    }
+})();
+
 function debounce(fn, ms) { var t; return function () { clearTimeout(t); t = setTimeout(fn.bind(this), ms); }; }
 
 loadShipments();

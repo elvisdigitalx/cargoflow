@@ -4,10 +4,10 @@
    ===================================================================== */
 
 :root {
-    --cf-brand: #2563eb;
-    --cf-brand-2: #3b82f6;
-    --cf-brand-dark: #1d4ed8;
-    --cf-accent: #06b6d4;
+    --cf-brand: #e82127;
+    --cf-brand-2: #f43f47;
+    --cf-brand-dark: #b3121b;
+    --cf-accent: #f97316;
     --cf-orange: #f97316;
     --cf-green: #10b981;
     --cf-ink: #0f172a;
@@ -17,10 +17,32 @@
     --cf-border: #e2e8f0;
     --cf-text: #1e293b;
     --cf-text-muted: #64748b;
-    --cf-grad: linear-gradient(135deg, #2563eb 0%, #06b6d4 100%);
+    --cf-grad: linear-gradient(135deg, #e82127 0%, #f97316 100%);
+    --cf-grad-btn: linear-gradient(135deg, #ff2e33 0%, #e82127 55%, #a80f17 100%);
     --cf-radius: 16px;
     --cf-shadow: 0 10px 40px rgba(15, 23, 42, .08);
     --cf-shadow-lg: 0 24px 60px rgba(15, 23, 42, .14);
+}
+
+/* Re-theme Bootstrap's primary color to the CargoFlow brand (Tesla red) so
+   utility classes like text-primary, bg-primary and .progress-bar match. */
+:root {
+    --bs-primary: #e82127;
+    --bs-primary-rgb: 232, 33, 39;
+    --bs-link-color: #e82127;
+    --bs-link-color-rgb: 232, 33, 39;
+    --bs-link-hover-color: #b3121b;
+    --bs-link-hover-color-rgb: 179, 18, 27;
+}
+.btn-primary {
+    --bs-btn-bg: #e82127;
+    --bs-btn-border-color: #e82127;
+    --bs-btn-hover-bg: #c4161f;
+    --bs-btn-hover-border-color: #c4161f;
+    --bs-btn-active-bg: #b3121b;
+    --bs-btn-active-border-color: #b3121b;
+    --bs-btn-disabled-bg: #e82127;
+    --bs-btn-disabled-border-color: #e82127;
 }
 
 [data-bs-theme="dark"] {
@@ -40,13 +62,23 @@
 html { scroll-behavior: smooth; }
 
 body {
-    font-family: "Plus Jakarta Sans", "Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
+    font-family: "Inter", "Plus Jakarta Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
     background-color: var(--cf-surface);
     color: var(--cf-text);
     transition: background-color .3s ease, color .3s ease;
 }
 
-h1, h2, h3, h4, h5, h6 { font-weight: 700; letter-spacing: -.02em; }
+h1, h2, h3, h4, h5, h6,
+.display-1, .display-2, .display-3, .display-4, .display-5, .display-6 {
+    font-family: "Space Grotesk", "Inter", sans-serif;
+    font-weight: 700;
+    letter-spacing: -.02em;
+}
+
+.navbar-cf .navbar-brand,
+.stat-value, .step-num {
+    font-family: "Space Grotesk", "Inter", sans-serif;
+}
 
 a { color: var(--cf-brand); text-decoration: none; }
 a:hover { color: var(--cf-brand-dark); }
@@ -67,7 +99,7 @@ a:hover { color: var(--cf-brand-dark); }
 /* Buttons                                                             */
 /* ------------------------------------------------------------------ */
 .btn-brand {
-    background: var(--cf-grad);
+    background: var(--cf-grad-btn);
     color: #fff;
     border: none;
     font-weight: 600;
@@ -78,7 +110,7 @@ a:hover { color: var(--cf-brand-dark); }
 .btn-brand:hover, .btn-brand:focus {
     color: #fff;
     transform: translateY(-2px);
-    box-shadow: 0 12px 28px rgba(37, 99, 235, .35);
+    box-shadow: 0 12px 28px rgba(232, 33, 39, .35);
 }
 .btn-ghost {
     background: transparent;
@@ -138,8 +170,8 @@ a:hover { color: var(--cf-brand-dark); }
     position: relative;
     overflow: hidden;
     background:
-        radial-gradient(1100px 500px at 85% -10%, rgba(6, 182, 212, .18), transparent 60%),
-        radial-gradient(900px 500px at 0% 110%, rgba(37, 99, 235, .16), transparent 55%),
+        radial-gradient(1100px 500px at 85% -10%, rgba(249, 115, 22, .16), transparent 60%),
+        radial-gradient(900px 500px at 0% 110%, rgba(232, 33, 39, .15), transparent 55%),
         var(--cf-surface);
     padding: 5rem 0 6rem;
 }
@@ -197,7 +229,7 @@ a:hover { color: var(--cf-brand-dark); }
     color: var(--cf-text);
 }
 .track-widget .input-group .form-control:focus {
-    box-shadow: 0 0 0 4px rgba(37, 99, 235, .15);
+    box-shadow: 0 0 0 4px rgba(232, 33, 39, .15);
     border-color: var(--cf-brand);
     background: var(--cf-surface);
 }
@@ -239,7 +271,7 @@ a:hover { color: var(--cf-brand-dark); }
     font-size: 1.5rem;
     margin-bottom: 1rem;
 }
-.fi-blue   { background: rgba(37, 99, 235, .12); color: #2563eb; }
+.fi-blue   { background: rgba(232, 33, 39, .12); color: #e82127; }
 .fi-cyan   { background: rgba(6, 182, 212, .14);  color: #0891b2; }
 .fi-orange { background: rgba(249, 115, 22, .14); color: #ea580c; }
 .fi-green  { background: rgba(16, 185, 129, .14); color: #059669; }
@@ -322,7 +354,7 @@ a:hover { color: var(--cf-brand-dark); }
 }
 .timeline-item.current .timeline-dot {
     background: var(--cf-brand); border-color: var(--cf-brand); color: #fff;
-    box-shadow: 0 0 0 5px rgba(37, 99, 235, .18);
+    box-shadow: 0 0 0 5px rgba(232, 33, 39, .18);
 }
 .timeline-item .tl-time { font-size: .8rem; color: var(--cf-text-muted); }
 .timeline-item .tl-status { font-weight: 700; }
@@ -345,7 +377,7 @@ a:hover { color: var(--cf-brand-dark); }
 }
 .form-control:focus, .form-select:focus {
     border-color: var(--cf-brand);
-    box-shadow: 0 0 0 4px rgba(37, 99, 235, .14);
+    box-shadow: 0 0 0 4px rgba(232, 33, 39, .14);
     background-color: var(--cf-surface);
 }
 .form-label { font-weight: 600; font-size: .9rem; }
@@ -378,6 +410,51 @@ a:hover { color: var(--cf-brand-dark); }
 }
 .footer .social a:hover { background: var(--cf-brand); color: #fff; }
 .footer-bottom { border-top: 1px solid rgba(255, 255, 255, .08); margin-top: 2.5rem; padding-top: 1.5rem; }
+
+/* ------------------------------------------------------------------ */
+/* Floating language switcher (Google Translate)                       */
+/* ------------------------------------------------------------------ */
+.cf-lang-switcher {
+    position: fixed;
+    left: 14px;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 1060;
+}
+.cf-lang-switcher .goog-te-gadget { font-size: 0; line-height: 0; }
+.cf-lang-switcher .goog-te-gadget-simple {
+    display: inline-flex !important;
+    align-items: center;
+    gap: .45rem;
+    background: var(--cf-surface);
+    border: 1.5px solid var(--cf-border);
+    border-radius: 999px;
+    padding: .6rem .95rem;
+    box-shadow: var(--cf-shadow);
+    font-size: .85rem;
+    font-weight: 600;
+    color: var(--cf-text);
+    cursor: pointer;
+    transition: border-color .2s ease, box-shadow .2s ease, transform .2s ease;
+}
+.cf-lang-switcher .goog-te-gadget-simple:hover {
+    border-color: var(--cf-brand);
+    box-shadow: var(--cf-shadow-lg);
+    transform: translateX(2px);
+}
+.cf-lang-switcher .goog-te-gadget-simple::before {
+    content: "🌐";
+    font-size: 1rem;
+    line-height: 1;
+}
+.cf-lang-switcher .goog-te-gadget-simple img,
+.cf-lang-switcher .goog-te-gadget-icon { display: none !important; }
+.cf-lang-switcher .goog-te-menu-value { color: var(--cf-text) !important; }
+.cf-lang-switcher .goog-te-menu-value span { color: inherit !important; }
+.cf-lang-switcher .goog-logo-link { display: none !important; }
+/* Keep the design clean while a translation is active */
+.goog-te-banner-frame { display: none !important; }
+body { top: 0 !important; }
 
 /* ------------------------------------------------------------------ */
 /* Toast                                                               */
