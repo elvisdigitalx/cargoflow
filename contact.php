@@ -21,6 +21,7 @@ require __DIR__ . '/includes/header.php';
 
         <div class="row g-5">
             <div class="col-lg-5">
+                <img class="page-visual mb-4 reveal" src="<?= base_url('assets/img/pages/contact-office.png') ?>" alt="CargoFlow support office" loading="lazy">
                 <div class="d-grid gap-3">
                     <div class="service-line">
                         <div class="feature-icon fi-blue m-0"><i class="bi bi-geo-alt"></i></div>

@@ -21,7 +21,8 @@ require __DIR__ . '/includes/header.php';
 
         <div class="row g-4">
             <div class="col-md-6 col-lg-4 reveal" id="ground">
-                <div class="feature-card">
+                <div class="feature-card with-media">
+                    <img class="service-card-img" src="<?= base_url('assets/img/pages/service-ground.png') ?>" alt="CargoFlow ground logistics service" loading="lazy">
                     <div class="feature-icon fi-blue"><i class="bi bi-truck"></i></div>
                     <h4>Ground Freight</h4>
                     <p class="text-muted-2">Reliable regional and cross-country road freight with flexible scheduling and live driver tracking.</p>
@@ -33,7 +34,8 @@ require __DIR__ . '/includes/header.php';
                 </div>
             </div>
             <div class="col-md-6 col-lg-4 reveal" id="air">
-                <div class="feature-card">
+                <div class="feature-card with-media">
+                    <img class="service-card-img" src="<?= base_url('assets/img/pages/service-air.png') ?>" alt="CargoFlow air logistics service" loading="lazy">
                     <div class="feature-icon fi-cyan"><i class="bi bi-airplane"></i></div>
                     <h4>Air Freight</h4>
                     <p class="text-muted-2">The fastest way to move time-sensitive cargo across borders, with door-to-door handling.</p>
@@ -45,7 +47,8 @@ require __DIR__ . '/includes/header.php';
                 </div>
             </div>
             <div class="col-md-6 col-lg-4 reveal" id="sea">
-                <div class="feature-card">
+                <div class="feature-card with-media">
+                    <img class="service-card-img" src="<?= base_url('assets/img/pages/service-ocean.png') ?>" alt="CargoFlow sea logistics service" loading="lazy">
                     <div class="feature-icon fi-green"><i class="bi bi-water"></i></div>
                     <h4>Ocean Freight</h4>
                     <p class="text-muted-2">Cost-effective bulk and container shipping for large volumes across major trade lanes.</p>
@@ -57,7 +60,8 @@ require __DIR__ . '/includes/header.php';
                 </div>
             </div>
             <div class="col-md-6 col-lg-4 reveal" id="express">
-                <div class="feature-card">
+                <div class="feature-card with-media">
+                    <img class="service-card-img" src="<?= base_url('assets/img/pages/service-express.png') ?>" alt="CargoFlow express logistics service" loading="lazy">
                     <div class="feature-icon fi-orange"><i class="bi bi-lightning-charge"></i></div>
                     <h4>Express Delivery</h4>
                     <p class="text-muted-2">Urgent documents and parcels delivered same-day or next-day with signature confirmation.</p>
@@ -69,7 +73,8 @@ require __DIR__ . '/includes/header.php';
                 </div>
             </div>
             <div class="col-md-6 col-lg-4 reveal" id="warehousing">
-                <div class="feature-card">
+                <div class="feature-card with-media">
+                    <img class="service-card-img" src="<?= base_url('assets/img/pages/service-warehouse.png') ?>" alt="CargoFlow warehousing logistics service" loading="lazy">
                     <div class="feature-icon fi-violet"><i class="bi bi-box-seam"></i></div>
                     <h4>Warehousing &amp; Fulfillment</h4>
                     <p class="text-muted-2">Secure storage, pick-and-pack and fulfillment integrated directly with your shipments.</p>
@@ -81,7 +86,8 @@ require __DIR__ . '/includes/header.php';
                 </div>
             </div>
             <div class="col-md-6 col-lg-4 reveal" id="customs">
-                <div class="feature-card">
+                <div class="feature-card with-media">
+                    <img class="service-card-img" src="<?= base_url('assets/img/pages/service-customs.png') ?>" alt="CargoFlow customs logistics service" loading="lazy">
                     <div class="feature-icon fi-pink"><i class="bi bi-shield-check"></i></div>
                     <h4>Customs &amp; Brokerage</h4>
                     <p class="text-muted-2">Expert handling of cross-border documentation, duties and compliance for seamless clearance.</p>

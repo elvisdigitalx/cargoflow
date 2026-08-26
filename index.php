@@ -45,6 +45,9 @@ require __DIR__ . '/includes/header.php';
 
             <div class="col-lg-6">
                 <div class="hero-illustration">
+                    <div class="image-card">
+                        <img class="page-visual" src="<?= base_url('assets/img/pages/hero-dashboard.png') ?>" alt="CargoFlow logistics dashboard with global shipment routes" loading="eager">
+                    </div>
                     <!-- Tracking widget -->
                     <div class="track-widget mb-4">
                         <h5 class="fw-bold mb-1">Track your shipment</h5>
@@ -270,9 +273,9 @@ require __DIR__ . '/includes/header.php';
         <div class="row g-4">
             <?php
             $testimonials = [
-                ['name' => 'Marcus Chen', 'role' => 'Ops Lead, Atlas Technologies', 'text' => 'CargoFlow replaced three separate tools. The live timeline and driver visibility cut our support tickets in half.', 'initials' => 'MC', 'color' => 'fi-blue'],
-                ['name' => 'Sofia Bianchi', 'role' => 'Founder, Bella Italia Imports', 'text' => 'Customs used to be a nightmare. Their brokerage team handles everything, and tracking is flawless door-to-door.', 'initials' => 'SB', 'color' => 'fi-green'],
-                ['name' => 'Daniel Okafor', 'role' => 'Director, Savannah Retail', 'text' => 'The instant quoting alone saves us hours every week. Reliable, transparent and genuinely fast.', 'initials' => 'DO', 'color' => 'fi-orange'],
+                ['name' => 'Marcus Chen', 'role' => 'Ops Lead, Atlas Technologies', 'text' => 'CargoFlow replaced three separate tools. The live timeline and driver visibility cut our support tickets in half.', 'image' => 'assets/img/avatars/testimonial-marcus-chen.png'],
+                ['name' => 'Sofia Bianchi', 'role' => 'Founder, Bella Italia Imports', 'text' => 'Customs used to be a nightmare. Their brokerage team handles everything, and tracking is flawless door-to-door.', 'image' => 'assets/img/avatars/testimonial-sofia-bianchi.png'],
+                ['name' => 'Daniel Okafor', 'role' => 'Director, Savannah Retail', 'text' => 'The instant quoting alone saves us hours every week. Reliable, transparent and genuinely fast.', 'image' => 'assets/img/avatars/testimonial-daniel-okafor.png'],
             ];
             foreach ($testimonials as $t): ?>
             <div class="col-md-4 reveal">
@@ -282,7 +285,7 @@ require __DIR__ . '/includes/header.php';
                     </div>
                     <p class="mb-4">&ldquo;<?= e($t['text']) ?>&rdquo;</p>
                     <div class="d-flex align-items-center gap-3 mt-auto">
-                        <div class="feature-icon <?= $t['color'] ?> m-0" style="width:44px;height:44px;font-size:1rem;"><?= e($t['initials']) ?></div>
+                        <img class="avatar-img" src="<?= base_url($t['image']) ?>" alt="Portrait of <?= e($t['name']) ?>" loading="lazy">
                         <div>
                             <div class="fw-bold"><?= e($t['name']) ?></div>
                             <div class="text-muted-2 small"><?= e($t['role']) ?></div>

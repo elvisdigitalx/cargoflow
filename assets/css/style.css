@@ -478,3 +478,83 @@ body { top: 0 !important; }
     .section { padding: 3.5rem 0; }
     .float-card { display: none; }
 }
+
+
+/* ------------------------------------------------------------------ */
+/* Page imagery                                                        */
+/* ------------------------------------------------------------------ */
+.page-visual,
+.service-card-img,
+.avatar-img {
+    display: block;
+    max-width: 100%;
+}
+.page-visual {
+    width: 100%;
+    border-radius: 24px;
+    object-fit: cover;
+    box-shadow: var(--cf-shadow-lg);
+    border: 1px solid color-mix(in srgb, var(--cf-border) 70%, transparent);
+}
+.hero .page-visual {
+    aspect-ratio: 4 / 3;
+    min-height: 420px;
+}
+.image-card {
+    position: relative;
+    border-radius: 24px;
+    overflow: hidden;
+    background: var(--cf-surface-2);
+}
+.image-card::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg, transparent 45%, rgba(15, 23, 42, .45));
+    pointer-events: none;
+}
+.hero-illustration .track-widget {
+    position: absolute;
+    left: 28px;
+    right: 28px;
+    bottom: 28px;
+    z-index: 4;
+    background: color-mix(in srgb, var(--cf-surface) 90%, transparent);
+    backdrop-filter: blur(14px);
+}
+.service-card-img {
+    width: 100%;
+    aspect-ratio: 16 / 10;
+    object-fit: cover;
+    border-radius: 14px;
+    margin-bottom: 1.2rem;
+    border: 1px solid var(--cf-border);
+}
+.avatar-img {
+    width: 56px;
+    height: 56px;
+    object-fit: cover;
+    border-radius: 50%;
+    border: 3px solid color-mix(in srgb, var(--cf-brand) 30%, var(--cf-surface));
+    box-shadow: 0 8px 22px rgba(15, 23, 42, .12);
+}
+.team-avatar {
+    width: 116px;
+    height: 116px;
+    object-fit: cover;
+    border-radius: 50%;
+    border: 4px solid color-mix(in srgb, var(--cf-brand) 25%, var(--cf-surface));
+    box-shadow: var(--cf-shadow);
+}
+.feature-card.with-media { overflow: hidden; }
+.auth-wrap {
+    background-image:
+        linear-gradient(135deg, color-mix(in srgb, var(--cf-surface) 84%, transparent), color-mix(in srgb, var(--cf-surface) 70%, transparent)),
+        url('../img/pages/login-background.png') !important;
+    background-size: cover !important;
+    background-position: center !important;
+}
+@media (max-width: 991.98px) {
+    .hero .page-visual { min-height: 360px; }
+    .hero-illustration .track-widget { position: relative; left: auto; right: auto; bottom: auto; margin-top: -2rem; }
+}
