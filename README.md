@@ -106,16 +106,25 @@ into a sub-folder such as `public_html/cargoflow`.
 - Create a database user and add it to the database with **ALL PRIVILEGES**.
 
 ### 3. Configure
-Edit `config/config.php` and set:
+Copy the config template and set your database credentials:
+
+```bash
+cp config/config.example.php config/config.php
+```
+
+Then edit `config/config.php` and set:
 
 ```php
 define('DB_HOST', 'localhost');
 define('DB_NAME', 'cargoflow');
 define('DB_USER', 'cargoflow_user');
 define('DB_PASS', 'your_strong_password');
+define('BASE_URL', 'https://yourdomain.com');   // optional, auto-detects if empty
 ```
 
-(Optionally set `BASE_URL` to your full site URL if auto-detection fails.)
+> **Note:** `config/config.php` contains live credentials and is excluded from
+> git (the repo is public). Always create it from `config.example.php` on the
+> server — never commit real passwords.
 
 ### 4. Import the schema
 - Easiest: open `https://yourdomain.com/install.php` in your browser and run the
