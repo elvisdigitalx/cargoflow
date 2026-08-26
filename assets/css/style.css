@@ -18,6 +18,7 @@
     --cf-text: #1e293b;
     --cf-text-muted: #64748b;
     --cf-grad: linear-gradient(135deg, #e82127 0%, #f97316 100%);
+    --cf-grad-btn: linear-gradient(135deg, #ff2e33 0%, #e82127 55%, #a80f17 100%);
     --cf-radius: 16px;
     --cf-shadow: 0 10px 40px rgba(15, 23, 42, .08);
     --cf-shadow-lg: 0 24px 60px rgba(15, 23, 42, .14);
@@ -98,7 +99,7 @@ a:hover { color: var(--cf-brand-dark); }
 /* Buttons                                                             */
 /* ------------------------------------------------------------------ */
 .btn-brand {
-    background: var(--cf-grad);
+    background: var(--cf-grad-btn);
     color: #fff;
     border: none;
     font-weight: 600;

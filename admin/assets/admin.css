@@ -196,3 +196,90 @@ body.admin h1, body.admin h2, body.admin h3, body.admin h4, body.admin h5, body.
         position: fixed; inset: 0; background: rgba(0,0,0,.5); z-index: 1035;
     }
 }
+
+/* ------------------------------------------------------------------ */
+/* Buttons — brand uses a red gradient                                */
+/* ------------------------------------------------------------------ */
+.btn-brand {
+    background: linear-gradient(135deg, #ff2e33 0%, #e82127 55%, #a80f17 100%);
+    color: #fff;
+    border: none;
+    font-weight: 600;
+    border-radius: 10px;
+    padding: .55rem 1.1rem;
+    box-shadow: 0 6px 16px rgba(232, 33, 39, .28);
+    transition: transform .15s ease, box-shadow .2s ease, filter .2s ease;
+}
+.btn-brand:hover, .btn-brand:focus {
+    color: #fff;
+    transform: translateY(-2px);
+    box-shadow: 0 10px 24px rgba(232, 33, 39, .4);
+    filter: brightness(1.05);
+}
+.btn-brand:disabled { opacity: .65; transform: none; }
+
+.btn-ghost {
+    background: transparent;
+    color: var(--a-text);
+    border: 1.5px solid var(--a-border);
+    font-weight: 600;
+    border-radius: 10px;
+    padding: .5rem 1rem;
+    transition: border-color .15s ease, color .15s ease;
+}
+.btn-ghost:hover { border-color: var(--a-brand); color: var(--a-brand); }
+.btn-ghost.active { border-color: var(--a-brand); color: var(--a-brand); background: rgba(232,33,39,.06); }
+
+/* ------------------------------------------------------------------ */
+/* KPI stat cards — interactive hover + gradient icons                 */
+/* ------------------------------------------------------------------ */
+.stat-card {
+    transition: transform .2s ease, box-shadow .25s ease;
+    cursor: default;
+}
+.stat-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 14px 30px rgba(15, 23, 42, .12);
+}
+.stat-icon.bg-grad-red    { background: linear-gradient(135deg, #ff4d52, #b3121b); }
+.stat-icon.bg-grad-orange { background: linear-gradient(135deg, #ffb347, #f97316); }
+.stat-icon.bg-grad-green  { background: linear-gradient(135deg, #34d399, #059669); }
+.stat-icon.bg-grad-cyan   { background: linear-gradient(135deg, #22d3ee, #0891b2); }
+.stat-icon.bg-grad-violet { background: linear-gradient(135deg, #a78bfa, #7c3aed); }
+.stat-icon.bg-grad-pink   { background: linear-gradient(135deg, #f472b6, #db2777); }
+.stat-icon.bg-grad-blue   { background: linear-gradient(135deg, #60a5fa, #2563eb); }
+
+/* ------------------------------------------------------------------ */
+/* Live indicator + clock                                              */
+/* ------------------------------------------------------------------ */
+.pulse-dot {
+    width: 8px; height: 8px; border-radius: 50%;
+    background: #10b981; display: inline-block;
+    animation: pulse 1.8s ease-in-out infinite;
+}
+@keyframes pulse {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(16, 185, 129, .45); }
+    50%      { box-shadow: 0 0 0 6px rgba(16, 185, 129, 0); }
+}
+.live-clock { font-variant-numeric: tabular-nums; }
+
+/* ------------------------------------------------------------------ */
+/* Shipment pipeline                                                   */
+/* ------------------------------------------------------------------ */
+.pipeline { display: flex; gap: 6px; }
+.pipeline .seg {
+    height: 48px;
+    border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    color: #fff; font-weight: 700; font-size: .95rem;
+    min-width: 46px;
+    cursor: pointer;
+    transition: filter .15s ease, transform .15s ease;
+}
+.pipeline .seg:hover { filter: brightness(1.12); transform: translateY(-2px); }
+.pipeline-legend a {
+    padding: .35rem .8rem; border-radius: 999px;
+    font-size: .78rem; font-weight: 600; text-decoration: none;
+    transition: transform .15s ease, box-shadow .15s ease;
+}
+.pipeline-legend a:hover { transform: translateY(-1px); box-shadow: 0 4px 10px rgba(15,23,42,.12); }
