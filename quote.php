@@ -12,52 +12,52 @@ $pageDesc = 'Request an instant, transparent shipping quote from CargoFlow.';
 require __DIR__ . '/includes/header.php';
 ?>
 
-<section class="section" style="padding-top:3rem;">
+<section class="section inner-hero">
     <div class="container">
-        <div class="row g-5 align-items-start">
+        <div class="row g-4 g-lg-5 align-items-start">
             <!-- Left: info -->
-            <div class="col-lg-5">
-                <div class="pe-lg-4">
-                    <div class="eyebrow mb-2">Get a Quote</div>
+            <div class="col-lg-5 reveal">
+                <div class="pe-lg-3">
+                    <div class="eyebrow dash mb-3">Get a Quote</div>
                     <h1 class="display-5 mb-3">Instant, transparent shipping quotes</h1>
                     <p class="text-muted-2 lead mb-4">
                         Tell us about your shipment and receive an estimated price
                         in seconds. No obligation, no hidden fees.
                     </p>
 
+                    <div class="media-frame mb-4">
+                        <img class="page-visual" src="<?= base_url('assets/img/pages/quote-consultant.png') ?>" alt="Logistics consultant preparing a shipping quote" loading="lazy">
+                    </div>
+
                     <div class="d-grid gap-3">
-                        <div class="service-line">
-                            <div class="feature-icon fi-green m-0"><i class="bi bi-lightning-charge"></i></div>
+                        <div class="info-card">
+                            <div class="info-ic fi-green"><i class="bi bi-lightning-charge-fill"></i></div>
                             <div>
                                 <h6 class="mb-0">Fast response</h6>
-                                <span class="text-muted-2 small">Instant estimate + email follow-up</span>
+                                <span class="info-sub">Instant estimate + email follow-up</span>
                             </div>
                         </div>
-                        <div class="service-line">
-                            <div class="feature-icon fi-blue m-0"><i class="bi bi-cash-coin"></i></div>
+                        <div class="info-card">
+                            <div class="info-ic fi-blue"><i class="bi bi-cash-coin"></i></div>
                             <div>
                                 <h6 class="mb-0">Transparent pricing</h6>
-                                <span class="text-muted-2 small">All-in rates, no surprises</span>
+                                <span class="info-sub">All-in rates, no surprises</span>
                             </div>
                         </div>
-                        <div class="service-line">
-                            <div class="feature-icon fi-orange m-0"><i class="bi bi-headset"></i></div>
+                        <div class="info-card">
+                            <div class="info-ic fi-orange"><i class="bi bi-headset"></i></div>
                             <div>
                                 <h6 class="mb-0">Dedicated support</h6>
-                                <span class="text-muted-2 small">A logistics expert reviews every quote</span>
+                                <span class="info-sub">A logistics expert reviews every quote</span>
                             </div>
                         </div>
                     </div>
 
-                    <img class="page-visual mt-4" src="<?= base_url('assets/img/pages/quote-consultant.png') ?>" alt="Logistics consultant preparing a shipping quote" loading="lazy">
-
-                    <div class="mt-4 p-4 rounded-4 bg-surface-2">
-                        <div class="d-flex align-items-center gap-3">
-                            <div class="feature-icon fi-violet m-0"><i class="bi bi-telephone"></i></div>
-                            <div>
-                                <div class="fw-bold">Prefer to talk?</div>
-                                <div class="text-muted-2">Call us at <?= e(setting('site_phone', '+1 (800) 555-0199')) ?></div>
-                            </div>
+                    <div class="call-box mt-4">
+                        <span class="info-ic fi-violet"><i class="bi bi-telephone-fill"></i></span>
+                        <div>
+                            <div class="fw-bold">Prefer to talk?</div>
+                            <div class="text-muted-2 small">Call us at <a href="tel:<?= preg_replace('/[^0-9+]/', '', setting('site_phone', '+1 (800) 555-0199')) ?>"><?= e(setting('site_phone', '+1 (800) 555-0199')) ?></a></div>
                         </div>
                     </div>
                 </div>

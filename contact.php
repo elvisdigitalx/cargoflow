@@ -11,55 +11,60 @@ $pageDesc = 'Get in touch with the CargoFlow team for support, sales or partners
 require __DIR__ . '/includes/header.php';
 ?>
 
-<section class="section" style="padding-top:3rem;">
+<section class="section inner-hero">
     <div class="container">
         <div class="section-head text-center mx-auto mb-5 reveal">
             <div class="eyebrow mb-2">Contact Us</div>
             <h1 class="display-5">We're here to help</h1>
-            <p class="text-muted-2 lead">Questions, support or partnership ideas — drop us a line.</p>
+            <p class="text-muted-2 lead">Questions, support or partnership ideas — reach us any way you like.</p>
         </div>
 
-        <div class="row g-5">
+        <div class="row g-4 g-lg-5">
             <div class="col-lg-5">
-                <img class="page-visual mb-4 reveal" src="<?= base_url('assets/img/pages/contact-office.png') ?>" alt="CargoFlow support office" loading="lazy">
-                <div class="d-grid gap-3">
-                    <div class="service-line">
-                        <div class="feature-icon fi-blue m-0"><i class="bi bi-geo-alt"></i></div>
+                <div class="media-frame reveal mb-4">
+                    <img class="page-visual" src="<?= base_url('assets/img/pages/contact-office.png') ?>" alt="CargoFlow support office" loading="lazy">
+                </div>
+                <div class="d-grid gap-3 reveal">
+                    <div class="info-card">
+                        <div class="info-ic fi-blue"><i class="bi bi-geo-alt-fill"></i></div>
                         <div>
                             <h6 class="mb-0">Head office</h6>
-                            <span class="text-muted-2 small"><?= e(setting('site_address', '100 Logistics Way, San Francisco, CA 94105')) ?></span>
+                            <span class="info-sub"><?= e(setting('site_address', '100 Logistics Way, San Francisco, CA 94105')) ?></span>
                         </div>
                     </div>
-                    <div class="service-line">
-                        <div class="feature-icon fi-green m-0"><i class="bi bi-telephone"></i></div>
+                    <div class="info-card">
+                        <div class="info-ic fi-green"><i class="bi bi-telephone-fill"></i></div>
                         <div>
                             <h6 class="mb-0">Phone</h6>
-                            <span class="text-muted-2 small"><?= e(setting('site_phone', '+1 (800) 555-0199')) ?></span>
+                            <span class="info-sub"><?= e(setting('site_phone', '+1 (800) 555-0199')) ?></span>
                         </div>
                     </div>
-                    <div class="service-line">
-                        <div class="feature-icon fi-orange m-0"><i class="bi bi-envelope"></i></div>
+                    <div class="info-card">
+                        <div class="info-ic fi-orange"><i class="bi bi-envelope-fill"></i></div>
                         <div>
                             <h6 class="mb-0">Email</h6>
-                            <span class="text-muted-2 small"><?= e(setting('site_email', 'hello@cargoflow.test')) ?></span>
+                            <span class="info-sub"><?= e(setting('site_email', 'hello@cargoflow.test')) ?></span>
                         </div>
                     </div>
-                    <div class="service-line">
-                        <div class="feature-icon fi-violet m-0"><i class="bi bi-clock"></i></div>
+                    <div class="info-card">
+                        <div class="info-ic fi-violet"><i class="bi bi-clock-fill"></i></div>
                         <div>
                             <h6 class="mb-0">Support hours</h6>
-                            <span class="text-muted-2 small">Mon–Fri, 8am–8pm · 24/7 for urgent shipments</span>
+                            <span class="info-sub">Mon–Fri, 8am–8pm · 24/7 for urgent shipments</span>
                         </div>
                     </div>
                 </div>
 
-                <div class="map-holder mt-4 reveal" style="height:260px;">
-                    <iframe title="Office location" src="https://www.openstreetmap.org/export/embed.html?bbox=-122.45%2C37.77%2C-122.38%2C37.81&layer=mapnik&marker=37.7905%2C-122.4050" style="width:100%;height:100%;border:0;" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+                <div class="form-card map-card p-3 mt-4 reveal">
+                    <div class="map-card-head px-2 pt-1"><i class="bi bi-geo-alt"></i>Find us</div>
+                    <div class="map-holder" style="height:250px;">
+                        <iframe title="Office location" src="https://www.openstreetmap.org/export/embed.html?bbox=-122.45%2C37.77%2C-122.38%2C37.81&layer=mapnik&marker=37.7905%2C-122.4050" style="width:100%;height:100%;border:0;border-radius:12px;" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+                    </div>
                 </div>
             </div>
 
             <div class="col-lg-7">
-                <div class="form-card p-4 p-md-5 reveal">
+                <div class="form-card p-4 p-md-5 reveal h-100">
                     <h4 class="fw-bold mb-1">Send us a message</h4>
                     <p class="text-muted-2 mb-4">We typically respond within one business day.</p>
 
@@ -84,7 +89,7 @@ require __DIR__ . '/includes/header.php';
                             </div>
                             <div class="col-12">
                                 <label class="form-label" for="c_message">Message *</label>
-                                <textarea class="form-control" id="c_message" name="message" rows="5" required></textarea>
+                                <textarea class="form-control" id="c_message" name="message" rows="6" required></textarea>
                             </div>
                             <div class="col-12">
                                 <button type="submit" class="btn btn-brand btn-lg px-4">
@@ -93,6 +98,12 @@ require __DIR__ . '/includes/header.php';
                             </div>
                         </div>
                     </form>
+
+                    <div class="trust-row">
+                        <span class="trust-chip"><i class="bi bi-reply-all-fill"></i> 1-business-day reply</span>
+                        <span class="trust-chip"><i class="bi bi-shield-check"></i> Your details stay private</span>
+                        <span class="trust-chip"><i class="bi bi-headset"></i> Real people, no bots</span>
+                    </div>
                 </div>
             </div>
         </div>
