@@ -72,7 +72,7 @@ $cf_site_address = setting('site_address', '100 Logistics Way, San Francisco, CA
 <!-- Minimal floating language switcher (fixed, left side) -->
 <div class="cf-lang-switcher notranslate" id="cfLangSwitcher" translate="no">
     <button type="button" class="cf-lang-btn" id="cfLangBtn" aria-label="Change language" aria-haspopup="true" aria-expanded="false">
-        <i class="bi bi-globe2"></i>
+        <i class="bi bi-globe2" aria-hidden="true"></i>
         <span class="cf-lang-current" id="cfLangCurrent">EN</span>
     </button>
     <div class="cf-lang-menu" id="cfLangMenu" role="menu" aria-label="Select language"></div>

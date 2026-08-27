@@ -86,23 +86,27 @@ require __DIR__ . '/includes/header.php';
     </div>
 </section>
 
-<!-- ================= STATS STRIP ================= -->
+<!-- ================= STATS ================= -->
 <section class="stat-strip">
     <div class="container">
-        <div class="row text-center g-4 py-4">
-            <div class="col-6 col-lg-3">
+        <div class="stats-panel reveal">
+            <div class="stat-card">
+                <div class="stat-icon"><i class="bi bi-box-seam-fill"></i></div>
                 <div class="stat-value" data-count="128000">0</div>
                 <div class="stat-label">Shipments delivered</div>
             </div>
-            <div class="col-6 col-lg-3">
+            <div class="stat-card">
+                <div class="stat-icon"><i class="bi bi-globe2"></i></div>
                 <div class="stat-value" data-count="120">0</div>
                 <div class="stat-label">Countries served</div>
             </div>
-            <div class="col-6 col-lg-3">
+            <div class="stat-card">
+                <div class="stat-icon"><i class="bi bi-patch-check-fill"></i></div>
                 <div class="stat-value" data-count="99.2" data-decimals="1">0</div>
-                <div class="stat-label">On-time delivery %</div>
+                <div class="stat-label">% On-time delivery</div>
             </div>
-            <div class="col-6 col-lg-3">
+            <div class="stat-card">
+                <div class="stat-icon"><i class="bi bi-building-fill-check"></i></div>
                 <div class="stat-value" data-count="2400">0</div>
                 <div class="stat-label">Business customers</div>
             </div>
@@ -119,32 +123,52 @@ require __DIR__ . '/includes/header.php';
             <p class="text-muted-2">Everything you need to move goods confidently across town or around the globe.</p>
         </div>
         <div class="row g-4">
-            <div class="col-md-6 col-lg-3 reveal">
-                <div class="feature-card">
-                    <div class="feature-icon fi-blue"><i class="bi bi-broadcast"></i></div>
-                    <h5>Real-time tracking</h5>
-                    <p class="text-muted-2 mb-0">Live GPS updates and a full event timeline for every parcel, pallet and container.</p>
+            <div class="col-sm-6 col-lg-3 reveal">
+                <div class="feature-card media-flush h-100">
+                    <div class="service-card-media">
+                        <img src="<?= base_url('assets/img/pages/feature-tracking.png') ?>" alt="Driver viewing live GPS tracking on a phone" loading="lazy">
+                        <span class="media-icon fi-blue"><i class="bi bi-broadcast"></i></span>
+                    </div>
+                    <div class="card-body-pad">
+                        <h5>Real-time tracking</h5>
+                        <p class="text-muted-2 mb-0">Live GPS updates and a full event timeline for every parcel, pallet and container.</p>
+                    </div>
                 </div>
             </div>
-            <div class="col-md-6 col-lg-3 reveal">
-                <div class="feature-card">
-                    <div class="feature-icon fi-green"><i class="bi bi-speedometer2"></i></div>
-                    <h5>Instant quotes</h5>
-                    <p class="text-muted-2 mb-0">Transparent pricing calculated in seconds — no phone calls, no waiting.</p>
+            <div class="col-sm-6 col-lg-3 reveal">
+                <div class="feature-card media-flush h-100">
+                    <div class="service-card-media">
+                        <img src="<?= base_url('assets/img/pages/feature-quotes.png') ?>" alt="Logistics manager reviewing an instant quote on a laptop" loading="lazy">
+                        <span class="media-icon fi-green"><i class="bi bi-speedometer2"></i></span>
+                    </div>
+                    <div class="card-body-pad">
+                        <h5>Instant quotes</h5>
+                        <p class="text-muted-2 mb-0">Transparent pricing calculated in seconds — no phone calls, no waiting.</p>
+                    </div>
                 </div>
             </div>
-            <div class="col-md-6 col-lg-3 reveal">
-                <div class="feature-card">
-                    <div class="feature-icon fi-orange"><i class="bi bi-globe2"></i></div>
-                    <h5>Global reach</h5>
-                    <p class="text-muted-2 mb-0">Air, ocean and ground networks covering 120+ countries and counting.</p>
+            <div class="col-sm-6 col-lg-3 reveal">
+                <div class="feature-card media-flush h-100">
+                    <div class="service-card-media">
+                        <img src="<?= base_url('assets/img/pages/feature-global.png') ?>" alt="Cargo plane over a container port on a global trade route" loading="lazy">
+                        <span class="media-icon fi-orange"><i class="bi bi-globe2"></i></span>
+                    </div>
+                    <div class="card-body-pad">
+                        <h5>Global reach</h5>
+                        <p class="text-muted-2 mb-0">Air, ocean and ground networks covering 120+ countries and counting.</p>
+                    </div>
                 </div>
             </div>
-            <div class="col-md-6 col-lg-3 reveal">
-                <div class="feature-card">
-                    <div class="feature-icon fi-violet"><i class="bi bi-shield-check"></i></div>
-                    <h5>Secure &amp; insured</h5>
-                    <p class="text-muted-2 mb-0">End-to-end protection with full insurance options on every shipment.</p>
+            <div class="col-sm-6 col-lg-3 reveal">
+                <div class="feature-card media-flush h-100">
+                    <div class="service-card-media">
+                        <img src="<?= base_url('assets/img/pages/feature-secure.png') ?>" alt="Courier handing over a sealed parcel at the doorstep" loading="lazy">
+                        <span class="media-icon fi-violet"><i class="bi bi-shield-check"></i></span>
+                    </div>
+                    <div class="card-body-pad">
+                        <h5>Secure &amp; insured</h5>
+                        <p class="text-muted-2 mb-0">End-to-end protection with full insurance options on every shipment.</p>
+                    </div>
                 </div>
             </div>
         </div>
@@ -158,33 +182,45 @@ require __DIR__ . '/includes/header.php';
             <div class="eyebrow mb-2">How it works</div>
             <h2 class="display-6">From quote to doorstep in 4 steps</h2>
         </div>
-        <div class="row g-4">
-            <div class="col-md-6 col-lg-3 reveal">
-                <div class="step-card">
-                    <div class="step-num">1</div>
+        <div class="steps-track">
+            <div class="step-item reveal">
+                <div class="step-visual">
+                    <span class="step-badge">1</span>
+                    <span class="step-icon"><i class="bi bi-ui-checks-grid"></i></span>
+                </div>
+                <div>
                     <h5>Get a quote</h5>
-                    <p class="text-muted-2 mb-0">Tell us what and where. Get an instant, transparent price.</p>
+                    <p class="text-muted-2">Tell us what and where. Get an instant, transparent price.</p>
                 </div>
             </div>
-            <div class="col-md-6 col-lg-3 reveal">
-                <div class="step-card">
-                    <div class="step-num">2</div>
+            <div class="step-item reveal">
+                <div class="step-visual">
+                    <span class="step-badge">2</span>
+                    <span class="step-icon"><i class="bi bi-credit-card-2-front-fill"></i></span>
+                </div>
+                <div>
                     <h5>Book &amp; pay</h5>
-                    <p class="text-muted-2 mb-0">Confirm your shipment and pay securely online in any currency.</p>
+                    <p class="text-muted-2">Confirm your shipment and pay securely online in any currency.</p>
                 </div>
             </div>
-            <div class="col-md-6 col-lg-3 reveal">
-                <div class="step-card">
-                    <div class="step-num">3</div>
+            <div class="step-item reveal">
+                <div class="step-visual">
+                    <span class="step-badge">3</span>
+                    <span class="step-icon"><i class="bi bi-geo-alt-fill"></i></span>
+                </div>
+                <div>
                     <h5>Track live</h5>
-                    <p class="text-muted-2 mb-0">Follow every milestone in real time with a unique tracking number.</p>
+                    <p class="text-muted-2">Follow every milestone in real time with a unique tracking number.</p>
                 </div>
             </div>
-            <div class="col-md-6 col-lg-3 reveal">
-                <div class="step-card">
-                    <div class="step-num">4</div>
+            <div class="step-item reveal">
+                <div class="step-visual">
+                    <span class="step-badge">4</span>
+                    <span class="step-icon"><i class="bi bi-house-check-fill"></i></span>
+                </div>
+                <div>
                     <h5>Delivered</h5>
-                    <p class="text-muted-2 mb-0">Signature-confirmed delivery with full proof of handoff.</p>
+                    <p class="text-muted-2">Signature-confirmed delivery with full proof of handoff.</p>
                 </div>
             </div>
         </div>
@@ -194,71 +230,38 @@ require __DIR__ . '/includes/header.php';
 <!-- ================= SERVICES PREVIEW ================= -->
 <section class="section bg-surface-2">
     <div class="container">
-        <div class="section-head mx-auto mb-5 reveal">
+        <div class="section-head text-center mx-auto mb-5 reveal">
             <div class="eyebrow mb-2">Our services</div>
             <h2 class="display-6">Built for every kind of cargo</h2>
+            <p class="text-muted-2">Six specialised networks, one platform — each handled by experts end to end.</p>
         </div>
-        <div class="row g-3">
-            <div class="col-md-6 reveal">
-                <div class="service-line">
-                    <div class="feature-icon fi-blue m-0"><i class="bi bi-truck"></i></div>
-                    <div>
-                        <h6 class="mb-0">Ground Freight</h6>
-                        <span class="text-muted-2 small">Reliable road delivery across regions</span>
+        <div class="row g-4">
+            <?php
+            $servicesPreview = [
+                ['img' => 'service-ground.png',   'icon' => 'bi-truck',                  'cls' => 'fi-blue',   'title' => 'Ground Freight',      'desc' => 'Reliable road delivery across regions'],
+                ['img' => 'service-air.png',      'icon' => 'bi-airplane',               'cls' => 'fi-cyan',   'title' => 'Air Freight',         'desc' => 'Fastest global delivery option'],
+                ['img' => 'service-ocean.png',    'icon' => 'bi-water',                  'cls' => 'fi-green',  'title' => 'Ocean Freight',       'desc' => 'Cost-effective bulk &amp; container shipping'],
+                ['img' => 'service-express.png',  'icon' => 'bi-lightning-charge-fill',  'cls' => 'fi-orange', 'title' => 'Express Delivery',    'desc' => 'Same-day &amp; next-day priority'],
+                ['img' => 'service-warehouse.png','icon' => 'bi-box-seam-fill',          'cls' => 'fi-violet', 'title' => 'Warehousing',         'desc' => 'Secure storage &amp; fulfillment'],
+                ['img' => 'service-customs.png',  'icon' => 'bi-shield-check',           'cls' => 'fi-pink',   'title' => 'Customs &amp; Brokerage', 'desc' => 'Hassle-free cross-border clearance'],
+            ];
+            foreach ($servicesPreview as $s): ?>
+            <div class="col-md-6 col-lg-4 reveal">
+                <div class="feature-card media-flush h-100">
+                    <div class="service-card-media">
+                        <img src="<?= base_url('assets/img/pages/' . $s['img']) ?>" alt="<?= strip_tags($s['title']) ?> service" loading="lazy">
+                        <span class="media-icon <?= $s['cls'] ?>"><i class="bi <?= $s['icon'] ?>"></i></span>
                     </div>
-                    <a href="<?= base_url('services.php') ?>" class="ms-auto btn btn-sm btn-ghost">Learn more</a>
+                    <div class="card-body-pad d-flex flex-column">
+                        <h5><?= $s['title'] ?></h5>
+                        <p class="text-muted-2 mb-3"><?= $s['desc'] ?></p>
+                        <a href="<?= base_url('services.php') ?>" class="mt-auto d-inline-flex align-items-center fw-semibold">
+                            Learn more <i class="bi bi-arrow-right ms-1"></i>
+                        </a>
+                    </div>
                 </div>
             </div>
-            <div class="col-md-6 reveal">
-                <div class="service-line">
-                    <div class="feature-icon fi-cyan m-0"><i class="bi bi-airplane"></i></div>
-                    <div>
-                        <h6 class="mb-0">Air Freight</h6>
-                        <span class="text-muted-2 small">Fastest global delivery option</span>
-                    </div>
-                    <a href="<?= base_url('services.php') ?>" class="ms-auto btn btn-sm btn-ghost">Learn more</a>
-                </div>
-            </div>
-            <div class="col-md-6 reveal">
-                <div class="service-line">
-                    <div class="feature-icon fi-green m-0"><i class="bi bi-water"></i></div>
-                    <div>
-                        <h6 class="mb-0">Ocean Freight</h6>
-                        <span class="text-muted-2 small">Cost-effective bulk &amp; container shipping</span>
-                    </div>
-                    <a href="<?= base_url('services.php') ?>" class="ms-auto btn btn-sm btn-ghost">Learn more</a>
-                </div>
-            </div>
-            <div class="col-md-6 reveal">
-                <div class="service-line">
-                    <div class="feature-icon fi-orange m-0"><i class="bi bi-lightning-charge"></i></div>
-                    <div>
-                        <h6 class="mb-0">Express Delivery</h6>
-                        <span class="text-muted-2 small">Same-day &amp; next-day priority</span>
-                    </div>
-                    <a href="<?= base_url('services.php') ?>" class="ms-auto btn btn-sm btn-ghost">Learn more</a>
-                </div>
-            </div>
-            <div class="col-md-6 reveal">
-                <div class="service-line">
-                    <div class="feature-icon fi-violet m-0"><i class="bi bi-box-seam"></i></div>
-                    <div>
-                        <h6 class="mb-0">Warehousing</h6>
-                        <span class="text-muted-2 small">Secure storage &amp; fulfillment</span>
-                    </div>
-                    <a href="<?= base_url('services.php') ?>" class="ms-auto btn btn-sm btn-ghost">Learn more</a>
-                </div>
-            </div>
-            <div class="col-md-6 reveal">
-                <div class="service-line">
-                    <div class="feature-icon fi-pink m-0"><i class="bi bi-shield-check"></i></div>
-                    <div>
-                        <h6 class="mb-0">Customs &amp; Brokerage</h6>
-                        <span class="text-muted-2 small">Hassle-free cross-border clearance</span>
-                    </div>
-                    <a href="<?= base_url('services.php') ?>" class="ms-auto btn btn-sm btn-ghost">Learn more</a>
-                </div>
-            </div>
+            <?php endforeach; ?>
         </div>
     </div>
 </section>
@@ -270,30 +273,45 @@ require __DIR__ . '/includes/header.php';
             <div class="eyebrow mb-2">Testimonials</div>
             <h2 class="display-6">Trusted by teams that ship daily</h2>
         </div>
-        <div class="row g-4">
-            <?php
-            $testimonials = [
-                ['name' => 'Marcus Chen', 'role' => 'Ops Lead, Atlas Technologies', 'text' => 'CargoFlow replaced three separate tools. The live timeline and driver visibility cut our support tickets in half.', 'image' => 'assets/img/avatars/testimonial-marcus-chen.png'],
-                ['name' => 'Sofia Bianchi', 'role' => 'Founder, Bella Italia Imports', 'text' => 'Customs used to be a nightmare. Their brokerage team handles everything, and tracking is flawless door-to-door.', 'image' => 'assets/img/avatars/testimonial-sofia-bianchi.png'],
-                ['name' => 'Daniel Okafor', 'role' => 'Director, Savannah Retail', 'text' => 'The instant quoting alone saves us hours every week. Reliable, transparent and genuinely fast.', 'image' => 'assets/img/avatars/testimonial-daniel-okafor.png'],
-            ];
-            foreach ($testimonials as $t): ?>
-            <div class="col-md-4 reveal">
-                <div class="feature-card h-100">
-                    <div class="d-flex gap-1 text-warning mb-3">
-                        <i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i>
-                    </div>
-                    <p class="mb-4">&ldquo;<?= e($t['text']) ?>&rdquo;</p>
-                    <div class="d-flex align-items-center gap-3 mt-auto">
-                        <img class="avatar-img" src="<?= base_url($t['image']) ?>" alt="Portrait of <?= e($t['name']) ?>" loading="lazy">
-                        <div>
-                            <div class="fw-bold"><?= e($t['name']) ?></div>
-                            <div class="text-muted-2 small"><?= e($t['role']) ?></div>
+        <?php
+        $testimonials = [
+            ['name' => 'Marcus Chen', 'role' => 'Ops Lead, Atlas Technologies', 'text' => 'CargoFlow replaced three separate tools. The live timeline and driver visibility cut our support tickets in half.', 'image' => 'assets/img/avatars/testimonial-marcus-chen.png'],
+            ['name' => 'Sofia Bianchi', 'role' => 'Founder, Bella Italia Imports', 'text' => 'Customs used to be a nightmare. Their brokerage team handles everything, and tracking is flawless door-to-door.', 'image' => 'assets/img/avatars/testimonial-sofia-bianchi.png'],
+            ['name' => 'Daniel Okafor', 'role' => 'Director, Savannah Retail', 'text' => 'The instant quoting alone saves us hours every week. Reliable, transparent and genuinely fast.', 'image' => 'assets/img/avatars/testimonial-daniel-okafor.png'],
+        ];
+        ?>
+        <div id="testimonialCarousel" class="carousel slide testimonial-carousel reveal" data-bs-ride="carousel" data-bs-interval="6000">
+            <div class="carousel-indicators">
+                <?php foreach ($testimonials as $i => $t): ?>
+                <button type="button" data-bs-target="#testimonialCarousel" data-bs-slide-to="<?= $i ?>" <?= $i === 0 ? 'class="active" aria-current="true"' : '' ?> aria-label="Testimonial <?= $i + 1 ?>"></button>
+                <?php endforeach; ?>
+            </div>
+            <div class="carousel-inner">
+                <?php foreach ($testimonials as $i => $t): ?>
+                <div class="carousel-item <?= $i === 0 ? 'active' : '' ?>">
+                    <div class="testimonial-slide">
+                        <div class="quote-mark"><i class="bi bi-quote"></i></div>
+                        <div class="t-stars">
+                            <i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i>
+                        </div>
+                        <p class="quote-text mb-0">&ldquo;<?= e($t['text']) ?>&rdquo;</p>
+                        <div class="t-person">
+                            <img src="<?= base_url($t['image']) ?>" alt="Portrait of <?= e($t['name']) ?>" loading="lazy">
+                            <div>
+                                <div class="fw-bold"><?= e($t['name']) ?></div>
+                                <div class="text-muted-2 small"><?= e($t['role']) ?></div>
+                            </div>
                         </div>
                     </div>
                 </div>
+                <?php endforeach; ?>
             </div>
-            <?php endforeach; ?>
+            <button class="carousel-control-prev tc-arrow" type="button" data-bs-target="#testimonialCarousel" data-bs-slide="prev" aria-label="Previous testimonial">
+                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            </button>
+            <button class="carousel-control-next tc-arrow" type="button" data-bs-target="#testimonialCarousel" data-bs-slide="next" aria-label="Next testimonial">
+                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            </button>
         </div>
     </div>
 </section>

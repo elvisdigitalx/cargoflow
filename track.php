@@ -40,7 +40,7 @@ if ($tracking !== '') {
 require __DIR__ . '/includes/header.php';
 ?>
 
-<section class="section" style="padding-top:3rem;">
+<section class="section" style="padding-top:3.5rem;">
     <div class="container">
         <div class="section-head text-center mx-auto mb-4 reveal">
             <div class="eyebrow mb-2">Track &amp; Trace</div>
@@ -49,7 +49,7 @@ require __DIR__ . '/includes/header.php';
         </div>
 
         <div class="row justify-content-center mb-4">
-            <div class="col-lg-9">
+            <div class="col-lg-8">
                 <img class="page-visual reveal" src="<?= base_url('assets/img/pages/tracking-control.png') ?>" alt="Shipment tracking route dashboard on a tablet" loading="lazy">
             </div>
         </div>
@@ -82,133 +82,188 @@ require __DIR__ . '/includes/header.php';
 
         <?php if ($shipment): ?>
             <?php
-            $meta = status_meta($shipment['status']);
-            $progress = [
-                'pending' => 8, 'picked_up' => 30, 'in_transit' => 55,
-                'out_for_delivery' => 82, 'delivered' => 100, 'on_hold' => 50,
-                'customs' => 40, 'cancelled' => 0, 'returned' => 0,
+            $senderDisplay = trim((string) ($shipment['sender_name'] ?? '')) ?: trim((string) ($shipment['customer_name'] ?? ''));
+            $fromDetail = trim((string) ($shipment['sender_details'] ?? '')) ?: trim((string) ($shipment['origin_address'] ?? ''));
+            $toName = trim((string) ($shipment['receiver_name'] ?? '')) ?: trim((string) ($shipment['destination'] ?? ''));
+            $toDetail = trim((string) ($shipment['receiver_details'] ?? '')) ?: trim((string) ($shipment['destination_address'] ?? ''));
+
+            // Shipment journey stepper
+            $journey = [
+                ['icon' => 'bi-box-seam',      'label' => 'Order placed'],
+                ['icon' => 'bi-box-arrow-up',  'label' => 'Picked up'],
+                ['icon' => 'bi-truck',         'label' => 'In transit'],
+                ['icon' => 'bi-geo-alt-fill',  'label' => 'Out for delivery'],
+                ['icon' => 'bi-check2-circle', 'label' => 'Delivered'],
             ];
-            $pct = $progress[$shipment['status']] ?? 50;
+            $stageMap = [
+                'pending' => 0, 'picked_up' => 1, 'in_transit' => 2, 'customs' => 2,
+                'on_hold' => 2, 'out_for_delivery' => 3, 'delivered' => 4,
+                'cancelled' => -1, 'returned' => -1,
+            ];
+            $stage = $stageMap[$shipment['status']] ?? 2;
+            $special = in_array($shipment['status'], ['customs', 'on_hold'], true) ? 'warn'
+                     : (in_array($shipment['status'], ['cancelled', 'returned'], true) ? 'bad' : '');
+            $isDelivered = $shipment['status'] === 'delivered';
+
+            $eventIconMap = [
+                'pending' => 'bi-box-seam', 'created' => 'bi-box-seam',
+                'picked_up' => 'bi-box-arrow-up', 'pickup' => 'bi-box-arrow-up',
+                'in_transit' => 'bi-truck', 'transit' => 'bi-truck',
+                'customs' => 'bi-shield-check', 'on_hold' => 'bi-pause-circle-fill',
+                'out_for_delivery' => 'bi-geo-alt-fill',
+                'delivered' => 'bi-check2', 'cancelled' => 'bi-x-lg',
+                'returned' => 'bi-arrow-return-left',
+            ];
+
+            // Detail rows
+            $detailRows = [
+                ['Service', title_case($shipment['service_type']), false],
+                ['Package', title_case($shipment['package_type']), false],
+            ];
+            if (trim((string) $shipment['description']) !== '') {
+                $detailRows[] = ['Contents', $shipment['description'], true];
+            }
+            $detailRows[] = ['Weight', ($shipment['weight'] !== null && $shipment['weight'] !== '') ? number_format((float) $shipment['weight'], 2) . ' kg' : '—', false];
+            $detailRows[] = ['Dimensions', $shipment['dimensions'] ?: '—', false];
+            $detailRows[] = ['Quantity', (int) $shipment['quantity'] . ' pcs', false];
+            if (trim((string) $shipment['current_location']) !== '') {
+                $detailRows[] = ['Current location', $shipment['current_location'], true];
+            }
+            $detailRows[] = ['Est. delivery', format_date($shipment['estimated_delivery']), false];
+            $detailRows[] = ['Carrier', $shipment['carrier'] ?: 'CargoFlow', false];
+            if (!empty($shipment['driver_name'])) { $detailRows[] = ['Driver', $shipment['driver_name'], false]; }
+            if (!empty($shipment['vehicle_name'])) { $detailRows[] = ['Vehicle', $shipment['vehicle_name'], false]; }
             ?>
-            <div class="row g-4 justify-content-center">
-                <!-- Summary card -->
+
+            <!-- Shipment hero -->
+            <div class="ship-hero reveal">
+                <div class="row align-items-center g-3">
+                    <div class="col-lg-7">
+                        <div class="text-muted-2 small text-uppercase fw-semibold mb-1"><i class="bi bi-receipt me-1"></i>Tracking number</div>
+                        <div class="ship-track-no font-monospace"><?= e($shipment['tracking_number']) ?></div>
+                    </div>
+                    <div class="col-lg-5 text-lg-end"><?= status_label($shipment['status']) ?></div>
+                </div>
+
+                <div class="ship-chips">
+                    <span class="ship-chip"><i class="bi bi-truck"></i><?= e(title_case($shipment['service_type'])) ?></span>
+                    <span class="ship-chip"><i class="bi bi-box-seam"></i><?= e(title_case($shipment['package_type'])) ?></span>
+                    <?php if ($shipment['weight'] !== null && $shipment['weight'] !== ''): ?>
+                    <span class="ship-chip"><i class="bi bi-speedometer"></i><?= e(number_format((float) $shipment['weight'], 2)) ?> kg</span>
+                    <?php endif; ?>
+                    <span class="ship-chip"><i class="bi bi-stack"></i><?= (int) $shipment['quantity'] ?> pcs</span>
+                    <span class="ship-chip"><i class="bi bi-calendar-event"></i>Est. <?= format_date($shipment['estimated_delivery']) ?></span>
+                </div>
+
+                <div class="ship-route">
+                    <div class="route-node">
+                        <span class="route-kicker"><i class="bi bi-circle-fill" style="font-size:.55rem;color:#06b6d4;"></i>From</span>
+                        <div class="route-city"><?= e($shipment['origin'] ?: 'Origin') ?></div>
+                        <?php if ($shipment['origin_address']): ?><div class="route-sub"><?= e($shipment['origin_address']) ?></div><?php endif; ?>
+                    </div>
+                    <div class="route-path">
+                        <span class="route-line"></span>
+                        <i class="bi bi-truck"></i>
+                        <span class="route-line"></span>
+                    </div>
+                    <div class="route-node route-to">
+                        <span class="route-kicker"><i class="bi bi-geo-alt-fill"></i>To</span>
+                        <div class="route-city"><?= e($shipment['destination'] ?: 'Destination') ?></div>
+                        <?php if ($shipment['destination_address']): ?><div class="route-sub"><?= e($shipment['destination_address']) ?></div><?php endif; ?>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Journey stepper -->
+            <div class="form-card ship-stepper-card reveal">
+                <div class="ship-stepper">
+                    <?php foreach ($journey as $i => $j):
+                        $cls = '';
+                        if ($isDelivered) {
+                            $cls = 'done';
+                        } elseif ($special && $i === $stage) {
+                            $cls = $special;
+                        } elseif ($i < $stage) {
+                            $cls = 'done';
+                        } elseif ($i === $stage) {
+                            $cls = 'active';
+                        }
+                    ?>
+                    <div class="ship-step <?= $cls ?>">
+                        <div class="ss-dot"><i class="bi <?= e($j['icon']) ?>"></i></div>
+                        <span class="ss-label"><?= e($j['label']) ?></span>
+                    </div>
+                    <?php endforeach; ?>
+                </div>
+                <?php if ($special === 'warn'): ?>
+                    <div class="alert alert-warning d-flex align-items-center gap-2 mt-3 mb-0 small">
+                        <i class="bi bi-exclamation-triangle-fill"></i>
+                        <span>Your shipment is currently <strong><?= e(str_replace('_', ' ', $shipment['status'])) ?></strong>. Our team is on it — the timeline below has the latest update.</span>
+                    </div>
+                <?php elseif ($special === 'bad'): ?>
+                    <div class="alert alert-danger d-flex align-items-center gap-2 mt-3 mb-0 small">
+                        <i class="bi bi-x-octagon-fill"></i>
+                        <span>This shipment is <strong><?= e(str_replace('_', ' ', $shipment['status'])) ?></strong>. Please contact support if you expected a delivery.</span>
+                    </div>
+                <?php endif; ?>
+            </div>
+
+            <div class="row g-4">
+                <!-- Details card -->
                 <div class="col-lg-4">
                     <div class="form-card p-4 h-100 reveal">
-                        <div class="d-flex justify-content-between align-items-start mb-3">
-                            <div>
-                                <div class="text-muted-2 small text-uppercase fw-semibold">Tracking number</div>
-                                <div class="fs-4 fw-bold font-monospace"><?= e($shipment['tracking_number']) ?></div>
-                            </div>
-                            <?= status_label($shipment['status']) ?>
-                        </div>
-
-                        <!-- Package image -->
                         <div class="package-photo mb-4">
                             <img src="<?= e(package_image_url($shipment)) ?>" alt="Photo of the <?= e($shipment['package_type']) ?> for shipment <?= e($shipment['tracking_number']) ?>" loading="lazy">
                             <span class="package-photo-tag"><i class="bi bi-box-seam me-1"></i><?= e(title_case($shipment['package_type'])) ?></span>
                         </div>
 
-                        <div class="progress mb-1" style="height:8px;">
-                            <div class="progress-bar" role="progressbar" style="width:<?= $pct ?>%;" aria-valuenow="<?= $pct ?>" aria-valuemin="0" aria-valuemax="100"></div>
+                        <div class="party-grid">
+                            <div class="party-card from">
+                                <span class="party-ic"><i class="bi bi-box-arrow-up"></i></span>
+                                <div>
+                                    <div class="party-role">From</div>
+                                    <div class="party-name"><?= e($senderDisplay ?: '—') ?></div>
+                                    <?php if ($fromDetail): ?><div class="party-detail"><?= e($fromDetail) ?></div><?php endif; ?>
+                                </div>
+                            </div>
+                            <div class="party-card to">
+                                <span class="party-ic"><i class="bi bi-geo-alt-fill"></i></span>
+                                <div>
+                                    <div class="party-role">To</div>
+                                    <div class="party-name"><?= e($toName ?: '—') ?></div>
+                                    <?php if ($toDetail): ?><div class="party-detail"><?= e($toDetail) ?></div><?php endif; ?>
+                                </div>
+                            </div>
                         </div>
-                        <div class="d-flex justify-content-between small text-muted-2 mb-4">
-                            <span>Picked up</span>
-                            <span class="fw-semibold text-body"><?= e($meta[0]) ?></span>
-                            <span>Delivered</span>
+
+                        <div class="detail-grid">
+                            <?php foreach ($detailRows as $dr): ?>
+                                <div class="detail-item <?= $dr[2] ? 'wide' : '' ?>">
+                                    <span class="dl-label"><?= e($dr[0]) ?></span>
+                                    <span class="dl-value"><?= e((string) $dr[1]) ?></span>
+                                </div>
+                            <?php endforeach; ?>
                         </div>
 
-                        <dl class="row small mb-0">
-                            <?php $senderDisplay = trim((string) ($shipment['sender_name'] ?? '')) ?: trim((string) ($shipment['customer_name'] ?? '')); ?>
-                            <?php if ($senderDisplay): ?>
-                            <dt class="col-5 text-muted-2 fw-semibold">Sender</dt>
-                            <dd class="col-7"><?= e($senderDisplay) ?>
-                                <?php if (!empty($shipment['sender_details'])): ?>
-                                <div class="text-muted-2" style="font-size:.8rem;white-space:pre-line;"><?= e($shipment['sender_details']) ?></div>
-                                <?php endif; ?>
-                            </dd>
+                        <div class="ship-dates">
+                            <div class="d-flex justify-content-between small">
+                                <span class="text-muted-2"><i class="bi bi-box-arrow-up me-1"></i>Shipped</span>
+                                <span class="fw-semibold"><?= format_datetime($shipment['shipped_at']) ?></span>
+                            </div>
+                            <?php if ($shipment['delivered_at']): ?>
+                            <div class="d-flex justify-content-between small">
+                                <span class="text-muted-2"><i class="bi bi-check2-circle me-1"></i>Delivered</span>
+                                <span class="fw-semibold text-success"><?= format_datetime($shipment['delivered_at']) ?></span>
+                            </div>
                             <?php endif; ?>
-
-                            <?php if (!empty($shipment['receiver_name'])): ?>
-                            <dt class="col-5 text-muted-2 fw-semibold">Receiver</dt>
-                            <dd class="col-7"><?= e($shipment['receiver_name']) ?>
-                                <?php if (!empty($shipment['receiver_details'])): ?>
-                                <div class="text-muted-2" style="font-size:.8rem;white-space:pre-line;"><?= e($shipment['receiver_details']) ?></div>
-                                <?php endif; ?>
-                            </dd>
-                            <?php endif; ?>
-
-                            <dt class="col-5 text-muted-2 fw-semibold">Service</dt>
-                            <dd class="col-7 text-capitalize"><?= e($shipment['service_type']) ?></dd>
-
-                            <dt class="col-5 text-muted-2 fw-semibold">Package type</dt>
-                            <dd class="col-7 text-capitalize"><?= e($shipment['package_type']) ?></dd>
-
-                            <?php if ($shipment['description']): ?>
-                            <dt class="col-5 text-muted-2 fw-semibold">Contents</dt>
-                            <dd class="col-7"><?= e($shipment['description']) ?></dd>
-                            <?php endif; ?>
-
-                            <dt class="col-5 text-muted-2 fw-semibold">Weight</dt>
-                            <dd class="col-7"><?= ($shipment['weight'] !== null && $shipment['weight'] !== '') ? e(number_format((float) $shipment['weight'], 2)) . ' kg' : '—' ?></dd>
-
-                            <dt class="col-5 text-muted-2 fw-semibold">Dimensions</dt>
-                            <dd class="col-7"><?= e($shipment['dimensions'] ?: '—') ?></dd>
-
-                            <dt class="col-5 text-muted-2 fw-semibold">Quantity</dt>
-                            <dd class="col-7"><?= (int) $shipment['quantity'] ?> pcs</dd>
-
-                            <dt class="col-5 text-muted-2 fw-semibold">Origin</dt>
-                            <dd class="col-7"><?= e($shipment['origin'] ?: '—') ?>
-                                <?php if ($shipment['origin_address']): ?>
-                                <div class="text-muted-2" style="font-size:.8rem;"><?= e($shipment['origin_address']) ?></div>
-                                <?php endif; ?>
-                            </dd>
-
-                            <dt class="col-5 text-muted-2 fw-semibold">Destination</dt>
-                            <dd class="col-7"><?= e($shipment['destination'] ?: '—') ?>
-                                <?php if ($shipment['destination_address']): ?>
-                                <div class="text-muted-2" style="font-size:.8rem;"><?= e($shipment['destination_address']) ?></div>
-                                <?php endif; ?>
-                            </dd>
-
-                            <dt class="col-5 text-muted-2 fw-semibold">Current location</dt>
-                            <dd class="col-7"><?= e($shipment['current_location'] ?: '—') ?></dd>
-
-                            <dt class="col-5 text-muted-2 fw-semibold">Est. delivery</dt>
-                            <dd class="col-7"><?= format_date($shipment['estimated_delivery']) ?></dd>
-
-                            <dt class="col-5 text-muted-2 fw-semibold">Carrier</dt>
-                            <dd class="col-7"><?= e($shipment['carrier'] ?: 'CargoFlow') ?></dd>
-
-                            <?php if ($shipment['driver_name']): ?>
-                            <dt class="col-5 text-muted-2 fw-semibold">Driver</dt>
-                            <dd class="col-7"><?= e($shipment['driver_name']) ?></dd>
-                            <?php endif; ?>
-
-                            <?php if ($shipment['vehicle_name']): ?>
-                            <dt class="col-5 text-muted-2 fw-semibold">Vehicle</dt>
-                            <dd class="col-7"><?= e($shipment['vehicle_name']) ?></dd>
-                            <?php endif; ?>
-                        </dl>
-
-                        <hr>
-                        <div class="d-flex justify-content-between small">
-                            <span class="text-muted-2">Shipped</span>
-                            <span><?= format_datetime($shipment['shipped_at']) ?></span>
                         </div>
-                        <?php if ($shipment['delivered_at']): ?>
-                        <div class="d-flex justify-content-between small mt-1">
-                            <span class="text-muted-2">Delivered</span>
-                            <span><?= format_datetime($shipment['delivered_at']) ?></span>
-                        </div>
-                        <?php endif; ?>
                     </div>
                 </div>
 
                 <!-- Timeline + map -->
                 <div class="col-lg-8">
                     <div class="form-card p-4 mb-4 reveal">
-                        <h5 class="fw-bold mb-4"><i class="bi bi-clock-history me-2 text-primary"></i>Tracking timeline</h5>
+                        <div class="card-title-icon"><i class="bi bi-clock-history"></i>Tracking timeline</div>
                         <?php if ($events): ?>
                         <div class="timeline">
                             <?php
@@ -216,9 +271,10 @@ require __DIR__ . '/includes/header.php';
                             foreach ($events as $i => $ev):
                                 $isLast = ($i === $last);
                                 $cls = $ev['status'] === 'delivered' ? 'completed' : ($isLast ? 'current' : 'completed');
+                                $evIcon = $eventIconMap[$ev['status']] ?? ($cls === 'completed' ? 'bi-check-lg' : 'bi-circle-fill');
                             ?>
                             <div class="timeline-item <?= $cls ?>">
-                                <div class="timeline-dot"><i class="bi bi-<?= $cls === 'completed' ? 'check-lg' : 'dot' ?>"></i></div>
+                                <div class="timeline-dot"><i class="bi <?= e($evIcon) ?>"></i></div>
                                 <div class="d-flex flex-wrap justify-content-between gap-1">
                                     <span class="tl-status text-capitalize"><?= e(str_replace('_', ' ', $ev['status'])) ?></span>
                                     <span class="tl-time"><i class="bi bi-calendar3 me-1"></i><?= format_datetime($ev['event_time']) ?></span>
@@ -237,8 +293,9 @@ require __DIR__ . '/includes/header.php';
                         <?php endif; ?>
                     </div>
 
-                    <div class="form-card reveal">
-                        <div class="map-holder" id="trackingMap" style="height:320px;"></div>
+                    <div class="form-card map-card p-3 reveal">
+                        <div class="map-card-head px-2 pt-1"><i class="bi bi-geo-alt"></i>Live route map</div>
+                        <div class="map-holder" id="trackingMap" style="height:340px;"></div>
                     </div>
                 </div>
             </div>
